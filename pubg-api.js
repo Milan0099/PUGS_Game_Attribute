@@ -20,6 +20,18 @@ module.exports = function(axios, apikey) {
         },
         getTournaments: () => {
             return axiosInstance.get('tournaments');
-        }
+        },
+        getPlayer: (playerId, shard = 'steam') => {
+            return axiosInstance.get(`shards/${shard}/players?filter[playerNames]=${playerId}`);
+        },
+        getMatch: (matchId, shard = 'steam') => {
+            return axiosInstance.get(`shards/${shard}/matches/${matchId}`);
+        },
+        getPlayerSeasonStats: (accountId, seasonId, shard = 'steam') => {
+            // accountId is the actual id of the player
+            // seasonId are from db
+            return axiosInstance.get(`shards/${shard}/players/${accountId}/seasons/${seasonId}`);
+        },
+        
     };
 };

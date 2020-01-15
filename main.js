@@ -3,11 +3,14 @@ const axios = require('axios');
 const squel = require('squel').useFlavour('mysql');
 
 const configs = require('./configs.json');
+const mapNames = require('./mapName.json');
 const dbFunctions = require('./dbfunctions');
-const api = require('./api')(axios, configs.APIkey);
+const api = require('./pubg-api')(axios, configs.APIkey);
 const steamApi = require('./steam-api')(axios, configs.SteamAPIKey, configs.PUBGAppID);
 const queries = require('./queries')(squel);
 const _queryFunctions = require('./queryFunctions');
+const _pubgApiHandlers = require('./pubg-api-handlers.js');
+const { generateMatchID, getAllPlayerMatches } = require('./utils');
 
 // MYSQL 
 const DBConnection = mysql.createConnection({
@@ -25,7 +28,7 @@ DBConnection.connect((connectionError) => {
         process.exit(1);
     }
     const qfns = _queryFunctions(DBConnection);
-
+    const pubgApiHandlers = _pubgApiHandlers(qfns, queries);
     // fetching sample matches
     qfns.haveMatchesCached(queries.matches(), (err, cache) => {
         if(err) {
@@ -40,18 +43,7 @@ DBConnection.connect((connectionError) => {
         }
         // fetch the samples
         api.getSamples()
-            .then(res => {
-                const matches = res.data.data.relationships.matches.data;
-                qfns.insertMatchesHandler(queries.insertMatches(matches), (err) => {
-                    if(err) {
-                        console.log('[!] Error while inserting matches');
-                        console.error(err);
-                    }
-                    else {
-                        console.log('[*] Matches added successfully');   
-                    }                    
-                });
-            })
+            .then(res => pubgApiHandlers.getSamplesHandler(res))
             .catch(matchesFetchError => {
                 console.log('[!] Error occured while fetching matches');
                 console.error(matchesFetchError);
@@ -70,22 +62,10 @@ DBConnection.connect((connectionError) => {
         }
         // fetch tournaments
         api.getTournaments()
-            .then(res => {
-                const tours = res.data.data;
-                qfns.insertTournamentsHandler(queries.insertTournaments(tours), (inserr) => {
-                    if(inserr) {
-                        console.log('[!] Error while inserting tournaments');
-                        console.error(inserr);
-                    }
-                    else {
-                        console.log('[*] Tournaments inserted successfully');
-                    }
-                });
-            })
+            .then(res => pubgApiHandlers.getTournaments(res))
             .catch(toursFetchErr => {
                 console.log('[!] Error while fetching tournaments');
                 console.error(toursFetchErr);
-                DBConnection.end(dbFunctions.endConnectionHandler);
             });
     });
     // fetch game schema
@@ -101,17 +81,7 @@ DBConnection.connect((connectionError) => {
         }
         else {
             steamApi.getGameSchema()
-                .then(res => {
-                    const schema = res.data.game.availableGameStats.achievements;
-                    qfns.insertGameSchemaHandler(queries.insertGameSchema(schema), (inserr) => {
-                        if(inserr) {
-                            console.log('[!] Error while inserting game schema');
-                            console.error(inserr);
-                            return ;
-                        }
-                        console.log('[*] Schema inserted successfully');
-                    });
-                })
+                .then(res => pubgApiHandlers.getGameSchemaHanlder(res))
                 .catch(fetchSchemaErr => {
                     console.log('[!] Error while fetching schema');
                     console.error(fetchSchemaErr);
@@ -131,20 +101,7 @@ DBConnection.connect((connectionError) => {
         }
         else {
             steamApi.getGlobalAchievementsPercentages()
-                .then(res => {
-                    const percentages = res.data.achievementpercentages.achievements;
-                    qfns.insertGlobalAchivementsPercentages(
-                        queries.insertGamePercentages(percentages),
-                        (err) => {
-                            if(err) {
-                                console.log('[!] Error while inserting percentages');
-                                console.error(err);
-                                return ;
-                            }
-                            console.log('[*] Global Achievements Percentages inserted successfully');
-                        }
-                    )
-                })
+                .then(res => pubgApiHandlers.getGlobalAchievementsPercentagesHandler(res))
                 .catch(fetchPercErr => {
                     console.log('[!] Error while fetching percentages');
                     console.error(fetchPercErr);
@@ -152,5 +109,37 @@ DBConnection.connect((connectionError) => {
                 });
         }
     });
+    // test get players
+    /*api.getPlayer('WackyJacky101')
+        .then(res => pubgApiHandlers.getPlayerHandler(res))
+        .catch(getPlayerErr => {
+            console.log('[!] Error while fetching player');
+            console.error(getPlayerErr);
+            DBConnection.end(dbFunctions.endConnectionHandler);
+        });*/
+    // check if player stats are there in match object
+
+    const pid = 'account.c0e530e9b7244b358def282782f893af';
+    /* api.getMatch('fbe2f131-ff96-4e19-83b8-ac2ad28335f3')
+        .then(res => pubgApiHandler.getMatchHandler(res))
+        .catch(getMatchErr => {
+            console.error(getMatchErr);
+        });
+    */
+    
+    // test getPlayerSeasonStats
+    api.getPlayerSeasonStats(pid, 'division.bro.official.pc-2018-05')
+        .then(res => pubgApiHandlers.getPlayerSeasonStatsHandler(res))
+        .catch(fetchPlayerSeasonStatErr => {
+            /*if(fetchPlayerSeasonStatErr.response.status === 404) {
+                // not found
+                return console.log(`[-] No season stats for ${fetchPlayerSeasonStatErr.request.path.split('/').pop()}`);
+            }*/
+            console.log('[x] Error while fetchig player season stats');
+            //console.log(`[-] Request URL: ${fetchPlayerSeasonStatErr.request.path}`);
+            //console.log(`[-] Response Status: ${fetchPlayerSeasonStatErr.response.status}`);
+            console.error(fetchPlayerSeasonStatErr);
+        })
+        .finally(() => DBConnection.end(dbFunctions.endConnectionHandler));
 });
 
