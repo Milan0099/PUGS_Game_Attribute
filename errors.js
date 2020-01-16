@@ -12,5 +12,12 @@ module.exports = {
             this.name = "CallbackNotDefined";
             this.message = `Callback at function ${fnName} cannot be undefined`;
         }
+    },
+    RConHandlerNotDefined: class RConHandlerNotDefined extends Error {
+        constructor(fnName = "") {
+            super();
+            this.name = "RConHandlerNotDefined";
+            this.message = `Callback at function ${fnName} cannot be undefined`;
+        }
     }
 }

@@ -51,34 +51,72 @@ module.exports = function(qfns, queries) {
                     }
                 );
         },
-        getPlayerHandler: (res) => {
+        getPlayerAllMatchesHandler: (res) => {
             const data = res.data.data;
             const matches = data[0].relationships.matches.data;
             const matchIDGen = generateMatchID(matches);
 
-            console.log('[*] Fetched all match ids for WackyJacky101');
-            console.log('[*] Fetching match details');
+            //console.log('[*] Fetched all match ids for WackyJacky101');
+            //console.log('[*] Fetching match details');
             const interval = setInterval(getAllPlayerMatches, 10000, matchIDGen, api, mapNames);
         },
-        getMatchHandler: (res) => {
+        getPlayerHandler: (res) => {
+            // data is an array
             const data = res.data.data;
-            console.log(data.included);
+            return data[0].id;
+        },
+        getMatchHandler: (res, pid) => {
+            const data = res.data.data;
             //console.log(res.data.included);
             //console.log(res.data.included[0].attributes.stats);
             
             // find players stat
+            if(!data.included) {
+                return {
+                    message: 'No stats found'
+                };
+            }
             const playerStat = res.data.included.find(o => o.attributes.stats.playerId === pid);
-            console.log(playerStat);
+            return playerStat;
         },
-        getPlayerSeasonStatsHandler: (res) => {
-            console.log('[*] Stats for player WackyJacky101 for season division.bro.official.pc-2018-05');
+        getPlayerSeasonLifetimeStatsHandler: (res) => {
             const data = res.data.data;
             const gameModeStats = data.attributes.gameModeStats;
-            Object.keys(gameModeStats)
-                .forEach(mode => {
-                    console.log(`[*] Stats for ${mode}`);
-                    console.dir(gameModeStats[mode]);
-                });
+            const matches = {
+                squad: data.relationships.matchesSquad,
+                squadFpp: data.relationships.matchesSquadFPP,
+                solo: data.relationships.matchesSolo,
+                soloFpp: data.relationships.matchesSoloFPP,
+                duo: data.relationships.matchesDuo,
+                duoFpp: data.relationships.matchesDuoFPP
+            };
+            const name = data.attributes.name;
+            return { name, gameModeStats, matches };
+        },
+        getSeasonLeaderboardHandler: (res) => {
+            // show the names of top 500 in order of increasing rank
+            //const leaders = res.data.included;
+            //const ranked = leaders.sort((l1, l2) => l1.attributes.rank - l2.attributes.rank);
+            //console.log('[*] Showing top 500 for season');
+            //console.log('-----------------------------------');
+            /*ranked.forEach(player => {
+                let attr = player.attributes;
+                console.log(`
+                    PlayerName: ${attr.name}
+                    Rank: ${attr.rank}
+                    RankPoints: ${attr.stats.rankPoints}
+                    Wins: ${attr.stats.wins}
+                    GamesPlayed: ${attr.stats.games}
+                    WinRatio: ${attr.stats.winRatio}
+                    AverageDamage: ${attr.stats.averageDamage}
+                    Kills: ${attr.stats.kills}
+                    KillDeathRatio: ${attr.stats.killDeathRatio}
+                    AverageRank: ${attr.stats.averageRank}
+                    ----------------------------------------
+                `);
+            });*/
+            //console.log(`Leaderboard for ${}`)
+            
         }
     };
 }

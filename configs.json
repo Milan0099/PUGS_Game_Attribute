@@ -5,6 +5,26 @@
     "DBHOST": "localhost",
     "DBUSER": "pubg",
     "DBPASS": "pubg123",
-    "DBNAME": "pubg"
-    
+    "DBNAME": "pubg",
+    "REGIONS": [
+        { "code": "pc-as", "name": "Asia" },
+        { "code": "pc-eu", "name": "Europe" },
+        { "code": "pc-jp", "name": "Japan" },
+        { "code": "pc-kakao", "name": "Kakao" },
+        { "code": "pc-krjp", "name": "Korea" },
+        { "code": "pc-na", "name": "North America" },
+        { "code": "pc-oc", "name": "Oceania" },
+        { "code": "pc-ru", "name": "Russia" },
+        { "code": "pc-sa", "name": "South and Central America" },
+        { "code": "pc-sea", "name": "South East Asia" },
+        { "code": "pc-tournament", "name": "tournaments" }
+    ],
+    "GAME_MODES": [
+        "solo", "solo-fpp", "duo", "duo-fpp",
+        "squad", "squad-fpp"
+    ],
+    "SERVER_HOST": "127.0.0.1",
+    "SERVER_PORT": "4200",
+    "MEMCACHED_HOST": "127.0.0.1",
+    "MEMCACHED_PORT": 11211
 }

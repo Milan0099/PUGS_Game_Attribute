@@ -1,0 +1,37 @@
+{"message":"[2020 01 16 7:39] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 7:41] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 7:45] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 7:48] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[x] Error while fetching leaders","level":"error"}
+{"message":"[x] Error while fetching leaders","level":"error"}
+{"message":"[2020 01 16 7:54] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[x] Error while fetching leaders","level":"error"}
+{"code":"ER_BAD_FIELD_ERROR","errno":1054,"sqlMessage":"Unknown column 'game_mode' in 'where clause'","sqlState":"42S22","index":0,"sql":"SELECT * FROM player_stats_steam WHERE (game_mode = 'solo') ORDER BY rank ASC LIMIT 15","level":"error"}
+{"message":"[2020 01 16 7:59] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[x] Error while fetching leaders","level":"error"}
+{"code":"ER_BAD_FIELD_ERROR","errno":1054,"sqlMessage":"Unknown column 'game_mode' in 'where clause'","sqlState":"42S22","index":0,"sql":"SELECT * FROM player_stats_steam WHERE (game_mode = 'solo') ORDER BY rank ASC LIMIT 15","level":"error"}
+{"message":"[2020 01 16 8:00] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[x] Error while fetching leaders","level":"error"}
+{"code":"ER_BAD_FIELD_ERROR","errno":1054,"sqlMessage":"Unknown column 'rank' in 'order clause'","sqlState":"42S22","index":0,"sql":"SELECT * FROM player_stats_steam ORDER BY rank ASC LIMIT 15","level":"error"}
+{"message":"[2020 01 16 8:00] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 8:01] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 8:03] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 8:28] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 8:29] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 8:30] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 9:14] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 9:26] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 9:33] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 9:35] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 9:36] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 9:37] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 9:37] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 9:40] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 10:35] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 10:37] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 10:38] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 10:38] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 10:39] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 10:39] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 11:53] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
+{"message":"[2020 01 16 11:54] PUBGStats.info server started at 127.0.0.1:4200","level":"info"}
