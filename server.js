@@ -104,6 +104,7 @@ const pubgApiHandlers = _pubgApiHandlers(queryFns, queries);
 const pubgStatsApi = _pubgstatsApi(express, DBPool, queries, 
     queryFns, pubgApi, pubgApiHandlers, CachePool, logger);
 
+// setup HTTPS
 
 
 // for SSL verfication
@@ -125,11 +126,6 @@ if(process.env.PUBGSTATS_HOST && process.env.PUBGSTATS_PORT) {
     configs.SERVER_HOST = process.env.PUBGSTATS_HOST;
     configs.SERVER_PORT = process.env.PUBGSTATS_PORT;
 }
-// setup HTTPS
-https.createServer({
-    key: fs.readFileSync(path.resolve('./certs/domain-key.txt')),
-    cert: fs.readFileSync(path.resolve('./certs/domain-crt.txt')),
-    passphrase: 'notThatHard123'
-}, server).listen(configs.SERVER_PORT, configs.SERVER_HOST, 5, () => {
-    console.log(`PUBGStats.info API server started at ${configs.SERVER_HOST}:${configs.SERVER_PORT}`);
+server.listen(configs.SERVER_PORT, configs.SERVER_HOST, () => {
+    logger.info(`[${moment().format('YYYY MM DD h:mm')}] PUBGStats.info server started at ${configs.SERVER_HOST}:${configs.SERVER_PORT}`);
 });
