@@ -7,6 +7,8 @@
 */
 
 /////// ESSENTIAL PKGS   \\\\\\\\\\\\\\\\
+const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
@@ -101,6 +103,18 @@ const pubgApiHandlers = _pubgApiHandlers(queryFns, queries);
 const pubgStatsApi = _pubgstatsApi(express, DBPool, queries, 
     queryFns, pubgApi, pubgApiHandlers, CachePool, logger);
 
+
+// for SSL verfication
+server.get('/*', async (req, res, nxt) => {
+    const url = req.originalUrl;
+    if(url.indexOf('.well-known') !== -1) {
+        const fname = url.split('/').pop();
+        return res.send(
+            fs.readFileSync(path.resolve('./.well-known/acme-challenge/'.concat(fname))));
+    }
+    nxt();
+});
+
 server.use('/api', pubgStatsApi);
 
 // check for env vars
@@ -109,7 +123,6 @@ if(process.env.PUBGSTATS_HOST && process.env.PUBGSTATS_PORT) {
     configs.SERVER_HOST = process.env.PUBGSTATS_HOST;
     configs.SERVER_PORT = process.env.PUBGSTATS_PORT;
 }
-
 server.listen(configs.SERVER_PORT, configs.SERVER_HOST, () => {
     logger.info(`[${moment().format('YYYY MM DD h:mm')}] PUBGStats.info server started at ${configs.SERVER_HOST}:${configs.SERVER_PORT}`);
 });
