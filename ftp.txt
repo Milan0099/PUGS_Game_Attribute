@@ -7,3 +7,7 @@ Protocol:
 SFTP
 User name:
 u99716387-dev
+
+
+ssh
+_53v%2gTk@
