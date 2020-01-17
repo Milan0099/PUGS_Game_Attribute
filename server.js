@@ -9,6 +9,8 @@
 /////// ESSENTIAL PKGS   \\\\\\\\\\\\\\\\
 const express = require('express');
 const bodyParser = require('body-parser');
+const session = require('express-session');
+const connectMemcached = require('connect-memcached')(session);
 const cors = require('cors');
 const axios = require('axios');
 const mysql = require('mysql');
@@ -24,7 +26,7 @@ const configs = require('./configs.json');
 const pubgStatsJson = require('./pubg-stats.json');
 const mapNames = require('./mapName.json');
 
-///// LOGGER  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+/////// LOGGER  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 const transport = new winston.transports.DailyRotateFile({
     filename: 'log-%DATE%.log',
     datePattern: 'YYYY-MM-DD',
@@ -52,6 +54,7 @@ const InMemCache = require('./db-functions/cache')(configs, memcached);
 ////// CONSTANTS      \\\\\\\\\\\\\\\\\\\\\\\\\\
 const ACCESS_CTRL_MAX_AGE = 3600 * 2; // 2 hours
 const MYSQL_POOL_MAX_CONNECTIONS = 5; 
+const COOKIE_MAX_AGE = 30; //  30s; for prod, make it 7 days
 
 ////// SERVER SETUP    \\\\\\\\\\\\\\\\\\\\\\\\\\
 const server = express();
@@ -64,6 +67,22 @@ server.use(cors({
     "optionsSuccessStatus": 204,
     "maxAge": ACCESS_CTRL_MAX_AGE,
     "allowedHeaders": ["Content-Type", "Content-Length"]
+}));
+server.use(session({
+    name: 'pubgstats.sid',
+    secret: 'SOME-SECRETS-HERE',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: COOKIE_MAX_AGE,
+        secure: false, // change in production
+        sameSite: true,
+        httpOnly: true
+    },
+    store: new connectMemcached({
+        hosts: ['127.0.0.1:11211'],
+        secret: 'SOME-OTHER-SECRETS-HERE'
+    })
 }));
 
 //// DATABASE CONNECTIONS  \\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -83,6 +102,13 @@ const pubgStatsApi = _pubgstatsApi(express, DBPool, queries,
     queryFns, pubgApi, pubgApiHandlers, CachePool, logger);
 
 server.use('/api', pubgStatsApi);
+
+// check for env vars
+if(process.env.PUBGSTATS_HOST && process.env.PUBGSTATS_PORT) {
+    // for production depoloyment
+    configs.SERVER_HOST = process.env.PUBGSTATS_HOST;
+    configs.SERVER_PORT = process.env.PUBGSTATS_PORT;
+}
 
 server.listen(configs.SERVER_PORT, configs.SERVER_HOST, () => {
     logger.info(`[${moment().format('YYYY MM DD h:mm')}] PUBGStats.info server started at ${configs.SERVER_HOST}:${configs.SERVER_PORT}`);

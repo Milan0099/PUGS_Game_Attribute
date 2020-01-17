@@ -37,6 +37,8 @@ module.exports = function(axios, apikey) {
             // page = 1 : next 500
             return axiosInstance.get(`shards/${shard}/leaderboards/${seasonId}/${gameMode}?page[number]=${page}`);
         },
-        
+        getWeaponsMastery: (playerId, shard = 'steam') => {
+            return axiosInstance.get(`shards/${shard}/players/${playerId}/weapon_mastery`);
+        }
     };
 };

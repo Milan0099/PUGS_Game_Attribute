@@ -7,6 +7,54 @@
 module.exports = function(express, pool, queries, queryFns, pubgApi, pubgApiHandlers, cache, logger) {
     const api = express.Router();
 
+    api.post('/', async (req, res, nxt) => {
+        /*
+            * For handling cookie for all endpoints that deal with player
+            * Lookup up the ID once and save it as a cookie 
+        */
+        const pattern = /[p|P]layer/;
+        if(req.session.views) {
+            req.session.views++;
+        }
+        else {
+            req.session.views = 1;
+        }
+        // check if the request is for *player* endpoint
+        if(req.originalUrl.search(pattern) === -1) {
+            // don't lookup player
+            nxt();
+        }
+        else {
+            if(req.session.playerId) {
+                nxt();
+            }
+            else {
+                if(req.body && req.body.playerName) {
+                    // lookup player
+                    const resPlayer = await pubgApi.getPlayer(req.body.playerName);
+                    const playerId = pubgApiHandlers.getPlayerHandler(resPlayer);
+                    if(!playerId) {
+                        // throw an error
+                        return res.json({
+                            status: 404,
+                            message: 'No such player found'
+                        });
+                    }
+                    else {
+                        req.session.playerId = playerId;
+                        nxt();
+                    }
+                }
+                else {
+                    return res.json({
+                        status: 400,
+                        message: 'Player Name must be defined'
+                    });
+                }
+            } 
+        }
+    });
+
     api.post('/getTopLeadersBySeason', async (req, res, nxt) => {
         /*
             * Returns a set of user from past and current leaderboard 
@@ -71,15 +119,14 @@ module.exports = function(express, pool, queries, queryFns, pubgApi, pubgApiHand
             * Required params are playerName, seasonId
             * Note: seasonId is already cached in front end
         */
-        const { playerName, seasonId } = req.body;
-        if(!playerName || !seasonId) {
+        const playerId = req.session.playerId;
+        const { seasonId } = req.body;
+        if(!seasonId) {
             return res.json({
                 status: 400,
                 message: 'PlayerName and/or seasonId cannot be undefined'
             });
         }
-        const resPlayer = await pubgApi.getPlayer(playerName);
-        const playerId = pubgApiHandlers.getPlayerHandler(resPlayer);
         const resPlayerStats = await pubgApi.getPlayerSeasonStats(playerId, seasonId);
         const { gameModeStats, matches, name } = 
             pubgApiHandlers.getPlayerSeasonLifetimeStatsHandler(resPlayerStats);
@@ -92,7 +139,8 @@ module.exports = function(express, pool, queries, queryFns, pubgApi, pubgApiHand
         });
     });
     api.post('/getPlayerSeasonMatches', async (req, res, nxt) => {
-        let { seasonId, playerName, gameMode, page } = req.body;
+        const playerId = req.session.playerId;
+        let { seasonId, gameMode, page } = req.body;
         if(!gameMode) {
             return res.json({
                 status: 400,
@@ -102,7 +150,7 @@ module.exports = function(express, pool, queries, queryFns, pubgApi, pubgApiHand
         if(!page) page = 0; // used for pagination
         if(!seasonId) {
             // check cache
-            const matches = cache.getPlayerMatches(playerName);
+            const matches = cache.getPlayerMatches(playerId);
             if(!matches) {
                 return res.json({
                     status: 400,
@@ -154,6 +202,32 @@ module.exports = function(express, pool, queries, queryFns, pubgApi, pubgApiHand
                 matches: m
             });
         }
+    });
+    api.post('/getWeaponSummaries', async (req, res, nxt) => {
+        /*
+            * Returns the summary of weapons for a player
+            * Note: playerId is assumed to be known
+        */
+        const { playerId } = req.body;
+        if(!playerId) {
+            return res.json({
+                status: 400,
+                message: 'Player ID cannot be undefined'
+            });
+        }
+        const resSummaries = await pubgApi.getWeaponsMastery(playerId);
+        const summaries = pubgApiHandlers.getWeaponsMasteryHandler(resSummaries);
+        if(!summaries) {
+            // not found
+            return res.json({
+                status: 404,
+                message: 'No weapons stats found'
+            });
+        }
+        res.json({
+            status: 200,
+            summaries
+        });
     });
 
     return api;

@@ -117,6 +117,20 @@ module.exports = function(qfns, queries) {
             });*/
             //console.log(`Leaderboard for ${}`)
             
+        },
+        getWeaponsMasteryHandler: (res) => {
+            const data = res.data.data;
+            if(!data) {
+                return false;
+            }
+            const attributes = data.attributes;
+            if(!attributes) {
+                return false;
+            }
+            if(!attributes.weaponSummaries) {
+                return false;
+            }
+            return attributes.weaponSummaries;
         }
     };
 }
