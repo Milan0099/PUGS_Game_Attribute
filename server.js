@@ -123,6 +123,12 @@ server.use('/api', pubgStatsApi);
 // check for env vars
 if(process.env.PUBGSTATS_HOST && process.env.PUBGSTATS_PORT) {
     // for production depoloyment
+    if(process.env.PUBGSTATS_HOST !== 'localhost') {
+        process.env.PUBGSTATS_HOST = 'localhost';
+    }
+    if(process.env.PUBGSTATS_PORT !== '4200') {
+        process.env.PUBGSTATS_PORT = 4200;
+    }
     configs.SERVER_HOST = process.env.PUBGSTATS_HOST;
     configs.SERVER_PORT = process.env.PUBGSTATS_PORT;
 }
