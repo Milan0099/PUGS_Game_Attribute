@@ -134,4 +134,5 @@ if(process.env.PUBGSTATS_HOST && process.env.PUBGSTATS_PORT) {
 }
 server.listen(configs.SERVER_PORT, configs.SERVER_HOST, () => {
     logger.info(`[${moment().format('YYYY MM DD h:mm')}] PUBGStats.info server started at ${configs.SERVER_HOST}:${configs.SERVER_PORT}`);
+    console.log(`[${moment().format('YYYY MM DD h:mm')}] PUBGStats.info server started at ${configs.SERVER_HOST}:${configs.SERVER_PORT}`)
 });
