@@ -95,13 +95,11 @@ module.exports = function(qfns, queries) {
         },
         getSeasonLeaderboardHandler: (res) => {
             // show the names of top 500 in order of increasing rank
-            //const leaders = res.data.included;
-            //const ranked = leaders.sort((l1, l2) => l1.attributes.rank - l2.attributes.rank);
-            //console.log('[*] Showing top 500 for season');
-            //console.log('-----------------------------------');
-            /*ranked.forEach(player => {
+            const leaders = res.data.included;
+            let ranked = leaders.sort((l1, l2) => l1.attributes.rank - l2.attributes.rank);
+            ranked.map(player => {
                 let attr = player.attributes;
-                console.log(`
+                /*console.log(`
                     PlayerName: ${attr.name}
                     Rank: ${attr.rank}
                     RankPoints: ${attr.stats.rankPoints}
@@ -113,10 +111,22 @@ module.exports = function(qfns, queries) {
                     KillDeathRatio: ${attr.stats.killDeathRatio}
                     AverageRank: ${attr.stats.averageRank}
                     ----------------------------------------
-                `);
-            });*/
+                `);*/
+                return {
+                    playerName: attr.name,
+                    rank: attr.rank,
+                    rankPoints: attr.stats.rankPoints,
+                    wins: attr.stats.wins,
+                    gamesPlayed: attr.stats.games,
+                    winRatio: attr.stats.winRatio,
+                    averageDamage: attr.stats.averageDamage,
+                    kills: attr.stats.kills,
+                    killDeathRatio: attr.stats.killDeathRatio,
+                    averageRank: attr.stats.averageRank
+                };
+            });
             //console.log(`Leaderboard for ${}`)
-            
+            return ranked;
         },
         getWeaponsMasteryHandler: (res) => {
             const data = res.data.data;

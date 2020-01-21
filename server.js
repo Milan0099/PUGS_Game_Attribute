@@ -57,19 +57,19 @@ const InMemCache = require('./db-functions/cache')(configs, memcached);
 ////// CONSTANTS      \\\\\\\\\\\\\\\\\\\\\\\\\\
 const ACCESS_CTRL_MAX_AGE = 3600 * 2; // 2 hours
 const MYSQL_POOL_MAX_CONNECTIONS = 5; 
-const COOKIE_MAX_AGE = 30; //  30s; for prod, make it 7 days
+const COOKIE_MAX_AGE = 3600; //  1hr; for prod, make it 7 days
 
 ////// SERVER SETUP    \\\\\\\\\\\\\\\\\\\\\\\\\\
 const server = express();
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(cors({
-    "origin": "*",
-    "methods": "GET,POST",
-    "preflightContinue": false,
-    "optionsSuccessStatus": 204,
+    "origin": true,
+    "methods": "GET,POST,OPTIONS",
+    "preflightContinue": true,
+    "optionsSuccessStatus": 200,
     "maxAge": ACCESS_CTRL_MAX_AGE,
-    "allowedHeaders": ["Content-Type", "Content-Length"]
+    "allowedHeaders": ["Content-Type", "Content-Length", "Access-Control-Allow-Origin"]
 }));
 server.use(session({
     name: 'pubgstats.sid',

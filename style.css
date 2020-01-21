@@ -1,0 +1,303 @@
+@media screen and (min-width: 600px) {
+    #menu-toggler {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 75px;
+        height: 75px;
+    }
+    #menu-toggler a {
+        margin: 0 auto;
+    }
+    #menu-toggler a>i {
+        color: #15b097;
+    }
+    
+    #home {
+        width: 100%;
+        min-height: 1080px;
+        background: url('./assets/imgs/pubg.jpg') center no-repeat;
+    }
+    #pubg-logo {
+        position: fixed;
+        margin-top: -40px;
+        z-index: 999;
+        width: 125px;
+        height: 125px;
+    }
+}
+
+@media screen and (min-width: 993px) {
+    #menu-toggle {
+        display: none;
+    }
+     
+    #home {
+        width: 100%;
+        min-height: 1080px;
+        background: url('./assets/imgs/pubg.jpg') center no-repeat;
+    }
+    #pubg-logo {
+        position: fixed;
+        margin-top: -40px;
+        z-index: 999;
+        width: 125px;
+        height: 125px;
+    }
+}
+@media screen and (min-width: 1290px) {
+    #root-wrapper {
+        width: 100%;
+        min-height: 100vh;
+        margin-top: 0;
+        background-color: #070a07;
+    }
+    #content-wrapper {
+        margin-left: 300px;
+        
+    }
+    #menu-toggler {
+        display: none;
+    }
+    #close-btn-sm-screen {
+        display: none;
+    }
+    #site-nav {
+        padding-top: 200px;
+        z-index: 9999;
+        transform: translateX(0);
+        background: #0c120c !important;
+        opacity: 0.65;
+
+    }
+    #site-nav li {
+        display: flex;
+        flex-direction: row;
+        margin-left: 25px;
+        padding-bottom: 15px;
+    }
+    #site-nav li a {
+        color: #f2a900;
+        font-size: 24px;
+        font-weight: 900;
+        margin-top: 15px;
+        line-height: 25px;
+    }
+    #site-nav li a img {
+        margin-right: 50px;
+    }
+    #nav-background {
+        color: #f2a900;
+    }
+    .nav-bg-header {
+        font-size: 48px;
+        font-weight: bold;
+        font-family: 'Aladin', cursive;
+    }
+    .nav-bg-subtitle {
+        font-size: 16px;
+        font-weight: 600;
+        font-family: 'Noto Sans JP', sans-serif;
+    }
+    .header {
+        color: #f2a900;
+        font-family: 'Aladin', cursive;
+    }
+    .card-wrapper {
+        margin: 0 2.5%;
+    }
+    #home {
+        margin: 0 auto; 
+        position: relative; 
+        width: 100%; 
+        height: auto; 
+        padding: 0; 
+        overflow: hidden; 
+    }
+    #home div {
+        position: absolute; 
+        top: 0px; 
+        left: 0px; 
+        
+    }
+    #playersActive {
+        width: 100%;
+        height: auto;
+    }
+    #active-players-card {
+        width: 100%;
+        height: auto;
+        background: transparent !important;
+    }
+    #active-players-card table {
+        color: #f2a900;
+        font-size: 24px;
+        font-weight: 600;
+        font-family: 'Baskerville', serif;
+    }
+    #active-players-card table thead {
+        border-bottom: 2px solid #f2a900;
+    }
+    #leaderboard {
+        width: 100%;
+        margin-left: 25px;
+        margin-right: auto;
+    }
+    #leaderboard .input-field {
+        /*border: 1px solid blue;*/
+        width: 32%;
+        color: #f2a900;
+    }
+    .input-field input:focus + label {
+        color: #f2a900 !important;
+    }
+    /* label underline focus color */
+    .row .input-field input:focus {
+        border-bottom: 1px solid #f2a900 !important;
+        box-shadow: 0 1px 0 0 #f2a900 !important
+    }
+    .input-field {
+        color: #f2a900;
+    }
+    .select-dropdown {
+        /* Dropdown for the selector */
+        color: #f2a900;
+        background-color: #0c120c;
+    }
+    .select-dropdown li span {
+        color: #f2a900;
+    }
+    #leaderboard-select-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding-left: 2%;
+    }
+    #leaderboard-submit-wrapper {
+        padding-left: 2%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        width: 100%;
+        margin-bottom: 50px;
+    }
+    #leaderboard-submit {
+        background-color: #f2a900;
+        flex: 1;
+        font-family: 'Aladin', cursive;
+        font-weight: 600;
+        font-size: 20px;
+    }
+    #leaderboard-card {
+        width: 100%;
+        height: auto;
+        background: transparent !important;
+    }
+    #leaderboard-card table {
+        color: #f2a900;
+        font-size: 24px;
+        font-weight: 600;
+        font-family: 'Baskerville', serif;
+    }
+    #leaderboard-card table thead {
+        border-bottom: 2px solid #f2a900;
+        font-size: 20px;
+    }
+    .pubgstats-loading-spinner {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin: 0 auto;
+    }
+    #player-stats-wrapper {
+        padding-left: 2%;
+    }
+    #player-stats-card {
+        width: 100%;
+        height: auto;
+        background: transparent !important;
+    }
+    ::placeholder {
+        color: #f2a900;
+        font: 'Noto Sans JP', sans-serif;
+    }
+    #player-stats .input-field {
+        width: 32%;
+        color: #f2a900;
+    }
+    #player-stats input {
+        color: #f2a900;
+        font: 'Noto Sans JP', sans-serif;
+    }
+    #player-stats-details {
+        color: #f2a900;
+        font-size: 20px;
+    }
+    #player-stats-details thead {
+        border-bottom: 2px solid #f2a900;
+    }
+    #player-stats-details thead th {
+        text-align: center;
+    }
+    #weapons-mastery-wrapper {
+        padding-left: 2%;
+    }
+    #weapons-mastery-card {
+        width: 100%;
+        height: auto;
+        background: transparent !important;
+    }
+    #weapons-mastery .input-field {
+        width: 48%;
+        color: #f2a900;
+    }
+    #weapons-mastery input {
+        color: #f2a900;
+        font: 'Noto Sans JP', sans-serif;
+    }
+    #weapons-mastery-details {
+        color: #f2a900;
+        font-size: 20px;
+    }
+    #weapons-mastery-submit-wrapper {
+        padding-left: 2%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        width: 100%;
+        margin-bottom: 50px;
+    }
+    #weapons-mastery-submit {
+        background-color: #f2a900;
+        flex: 1;
+        font-family: 'Aladin', cursive;
+        font-weight: 600;
+        font-size: 20px;
+    }
+    
+}
+body {
+    background-color: #070a07;
+}
+.sidenav-opened {
+    transform: translateX(0%) !important;
+    
+}
+.sidenav-closed {
+    transform: translateX(-100%) !important;
+}
+.cell-border {
+    border-right: 1px solid #f2a900;
+}
+.cell {
+    padding: 5px 10px;
+}
+.hide-table {
+    display: none;
+}
+.show-table {
+    display: block;
+}
+.coll-spacer {
+    margin: 0 5px;
+}

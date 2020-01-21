@@ -9,8 +9,8 @@ const mapNames = require('./mapName.json');
 const { endConnectionHandler, DBHandlers } = require('./dbfunctions');
 const api = require('./apis/pubg-api')(axios, configs.APIkey);
 const steamApi = require('./apis/steam-api')(axios, configs.SteamAPIKey, configs.PUBGAppID);
-const queries = require('./queries')(squel);
-const _queryFunctions = require('./queryFunctions');
+const queries = require('./db-functions/queries')(squel);
+const _queryFunctions = require('./db-functions/queryFunctions');
 const _pubgApiHandlers = require('./pubg-api-handlers.js');
 const RConClient = require('./rcon-client');
 const { 
@@ -40,13 +40,13 @@ DBConnection.connect((connectionError) => {
     // the main invocation context
     (async () => {
         // fetching samples
-        await dbHandlers.samplesHandler();
+        //await dbHandlers.samplesHandler();
         //fetching tournaments
-        await dbHandlers.tournamentsHandler();
+        //await dbHandlers.tournamentsHandler();
         // fetching game schema
-        await dbHandlers.gameSchemaHandler();
+        //await dbHandlers.gameSchemaHandler();
         // fetch achievements %
-        await dbHandlers.globalAchievementsPercentagesHandler();
+        //await dbHandlers.globalAchievementsPercentagesHandler();
     
         /*api.getPlayer('WackyJacky101')
         .then(res => pubgApiHandlers.getPlayerHandler(res))
@@ -57,7 +57,7 @@ DBConnection.connect((connectionError) => {
         });*/
         // check if player stats are there in match object
 
-        const pid = 'account.c0e530e9b7244b358def282782f893af';
+        //const pid = 'account.c0e530e9b7244b358def282782f893af';
         /* api.getMatch('fbe2f131-ff96-4e19-83b8-ac2ad28335f3')
             .then(res => pubgApiHandler.getMatchHandler(res))
             .catch(getMatchErr => {
@@ -122,14 +122,32 @@ DBConnection.connect((connectionError) => {
                 };
             };
         });*/
-        const statsReversed = pubgStatsJson.stats.reverse(); // since latest entry at the bottom
+        /*const statsReversed = pubgStatsJson.stats.reverse(); // since latest entry at the bottom
         DBConnection.query(queries.insertSteamPlayerStats(statsReversed), (err, res) => {
                 if(err) {
                     console.log('[-] Error inserting steam player stats');
                     return console.error(err);
                 }
                 console.log('[*] Stats inserted successfully');
-        });
+        });*/
+        let plts = ['psn', 'kakao', 'xbox'];
+        for(const p of plts) {
+            let resSeas = await api.getSeasons(p);
+            let seasons = resSeas.data.data;
+            await new Promise((resolve, reject) => {
+                DBConnection.query(queries.insertSeasons(seasons, p), (err) => {
+                    if(err) {
+                        console.log('[x] Error while getting seasons');
+                        console.error(err);
+                        //reject(err);
+                    }
+                    else {
+                        console.log('[*] Got season');
+                        resolve();
+                    }
+                })
+            });
+        }
     })();
     
 });

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jan 17, 2020 at 05:14 AM
+-- Generation Time: Jan 21, 2020 at 03:32 AM
 -- Server version: 10.2.25-MariaDB
 -- PHP Version: 7.2.5
 
@@ -21,8 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `pubg`
 --
-CREATE DATABASE IF NOT EXISTS `pubg` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `pubg`;
 
 -- --------------------------------------------------------
 
@@ -12088,6 +12086,100 @@ INSERT INTO `seasons` (`_id`, `season_id`, `is_current`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `seasons_kakao`
+--
+
+CREATE TABLE `seasons_kakao` (
+  `_id` int(11) NOT NULL,
+  `season_id` varchar(100) NOT NULL,
+  `is_current` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `seasons_kakao`
+--
+
+INSERT INTO `seasons_kakao` (`_id`, `season_id`, `is_current`) VALUES
+(1, 'division.bro.official.2017-beta', 0),
+(2, 'division.bro.official.2017-pre1', 0),
+(3, 'division.bro.official.2017-pre2', 0),
+(4, 'division.bro.official.2017-pre3', 0),
+(5, 'division.bro.official.2017-pre4', 0),
+(6, 'division.bro.official.2017-pre5', 0),
+(7, 'division.bro.official.2017-pre6', 0),
+(8, 'division.bro.official.2017-pre7', 0),
+(9, 'division.bro.official.2017-pre8', 0),
+(10, 'division.bro.official.2017-pre9', 0),
+(11, 'division.bro.official.2018-01', 0),
+(12, 'division.bro.official.2018-02', 0),
+(13, 'division.bro.official.2018-03', 0),
+(14, 'division.bro.official.2018-04', 0),
+(15, 'division.bro.official.2018-05', 0),
+(16, 'division.bro.official.2018-06', 0),
+(17, 'division.bro.official.2018-07', 0),
+(18, 'division.bro.official.2018-08', 0),
+(19, 'division.bro.official.2018-09', 0),
+(20, 'division.bro.official.pc-2018-01', 0),
+(21, 'division.bro.official.pc-2018-02', 0),
+(22, 'division.bro.official.pc-2018-03', 0),
+(23, 'division.bro.official.pc-2018-04', 0),
+(24, 'division.bro.official.pc-2018-05', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `seasons_psn`
+--
+
+CREATE TABLE `seasons_psn` (
+  `_id` int(11) NOT NULL,
+  `season_id` varchar(100) NOT NULL,
+  `is_current` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `seasons_psn`
+--
+
+INSERT INTO `seasons_psn` (`_id`, `season_id`, `is_current`) VALUES
+(1, 'division.bro.official.2018-09', 0),
+(2, 'division.bro.official.playstation-01', 0),
+(3, 'division.bro.official.playstation-02', 0),
+(4, 'division.bro.official.console-03', 0),
+(5, 'division.bro.official.console-04', 0),
+(6, 'division.bro.official.console-05', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `seasons_xbox`
+--
+
+CREATE TABLE `seasons_xbox` (
+  `_id` int(11) NOT NULL,
+  `season_id` varchar(100) NOT NULL,
+  `is_current` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `seasons_xbox`
+--
+
+INSERT INTO `seasons_xbox` (`_id`, `season_id`, `is_current`) VALUES
+(1, 'division.bro.official.2018-05', 0),
+(2, 'division.bro.official.2018-06', 0),
+(3, 'division.bro.official.2018-07', 0),
+(4, 'division.bro.official.2018-08', 0),
+(5, 'division.bro.official.xbox-01', 0),
+(6, 'division.bro.official.xbox-02', 0),
+(7, 'division.bro.official.console-03', 0),
+(8, 'division.bro.official.console-04', 0),
+(9, 'division.bro.official.console-05', 1),
+(10, 'division.bro.official.xb-pre1', 0);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tournaments`
 --
 
@@ -12277,6 +12369,24 @@ ALTER TABLE `seasons`
   ADD PRIMARY KEY (`_id`);
 
 --
+-- Indexes for table `seasons_kakao`
+--
+ALTER TABLE `seasons_kakao`
+  ADD PRIMARY KEY (`_id`);
+
+--
+-- Indexes for table `seasons_psn`
+--
+ALTER TABLE `seasons_psn`
+  ADD PRIMARY KEY (`_id`);
+
+--
+-- Indexes for table `seasons_xbox`
+--
+ALTER TABLE `seasons_xbox`
+  ADD PRIMARY KEY (`_id`);
+
+--
 -- Indexes for table `tournaments`
 --
 ALTER TABLE `tournaments`
@@ -12320,7 +12430,25 @@ ALTER TABLE `player_stats_steam`
 -- AUTO_INCREMENT for table `seasons`
 --
 ALTER TABLE `seasons`
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
+
+--
+-- AUTO_INCREMENT for table `seasons_kakao`
+--
+ALTER TABLE `seasons_kakao`
   MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- AUTO_INCREMENT for table `seasons_psn`
+--
+ALTER TABLE `seasons_psn`
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `seasons_xbox`
+--
+ALTER TABLE `seasons_xbox`
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `tournaments`

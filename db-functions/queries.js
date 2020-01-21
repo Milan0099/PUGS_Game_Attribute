@@ -1,10 +1,13 @@
 module.exports = function(squel) {
     return {
-        seasons: () => {
+        seasons: (platform = '') => {
+            const t = platform ? `seasons_${platform}` : `seasons`;
             return squel
-                .select().from('seasons').toString();
+                .select().from(t)
+                .order('_id', false)
+                .limit(5).toString();
         },
-        insertSeasons: (seasons) => {
+        insertSeasons: (seasons, platform) => {
             const s = seasons.map(season => { 
                 return {
                     _id: null,
@@ -13,7 +16,7 @@ module.exports = function(squel) {
                 };
             });
             return squel
-                .insert().into('seasons')
+                .insert().into(`seasons_${platform}`)
                 .setFieldsRows(s)
                 .toString();
         },
@@ -125,12 +128,27 @@ module.exports = function(squel) {
                 .setFieldsRows(s).toString();
         },
         getTopLeadersBySeason: (gameMode, seasoon_id = 20, count = 15, platform = 'steam') => {
+            if(typeof season_id === 'string' && seasoon_id.search(/division/) !== -1) {
+                let s = squel.select()
+                    .from('seasons')
+                    .field('_id')
+                    .where('season_id = ?', seasoon_id)
+                    .limit(1).toString();
+                season_id = s._id;
+            }
             return squel.select()
                 .from(`leaderboards`)
                 .where('game_mode = ?', gameMode)
                 .where('season_id = ?', seasoon_id)
                 .order('rank')
                 .limit(count).toString();
+        },
+        getSteamPlayerStats: () => {
+            return squel.select()
+                .from('player_stats_steam')
+                .fields(['month, average_players, gain, gain_percentage, peak'])
+                .order('_id', false)
+                .toString();
         }
     };
 };
