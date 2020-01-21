@@ -3,7 +3,7 @@
     * ---------------------
     * Script for initializing all material components
 */
-const BASE_URL = 'http://localhost:4200/api';
+const BASE_URL = 'https://pubgstats.info/api';
 
 const ajaxErrorHandler = (xhr, textStatus, error) => {
     console.log('[x] Error occured while sending AJAX request');
