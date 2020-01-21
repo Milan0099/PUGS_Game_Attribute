@@ -133,7 +133,7 @@ const getLeaderboard = () => {
         return ;
     }
     $.ajax({
-        url: `http://localhost:4200/api/getTopLeadersBySeason`,
+        url: `${BASE_URL}/getTopLeadersBySeason`,
         dataType: 'json',
         contentType: 'application/json',
         method: 'POST',
@@ -395,7 +395,7 @@ const getPlayerWeaponsStats = () => {
 const getActivePlayers = () => {
     console.log('getting active players');
     $.ajax({
-        url: 'http://localhost:4200/api/getActivePlayers',
+        url: `${BASE_URL}/getActivePlayers`,
         dataType: 'json',
         error: (xhr, txtStatus, error) => {
             console.log('[x] Error while fetching steam active players');
