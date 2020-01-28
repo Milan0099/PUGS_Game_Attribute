@@ -90,8 +90,8 @@ module.exports = function(qfns, queries) {
                 duo: data.relationships.matchesDuo,
                 duoFpp: data.relationships.matchesDuoFPP
             };
-            const name = data.attributes.name;
-            return { name, gameModeStats, matches };
+            //const name = data.attributes.name;
+            return { gameModeStats, matches };
         },
         getSeasonLeaderboardHandler: (res) => {
             // show the names of top 500 in order of increasing rank
@@ -99,19 +99,6 @@ module.exports = function(qfns, queries) {
             let ranked = leaders.sort((l1, l2) => l1.attributes.rank - l2.attributes.rank);
             ranked.map(player => {
                 let attr = player.attributes;
-                /*console.log(`
-                    PlayerName: ${attr.name}
-                    Rank: ${attr.rank}
-                    RankPoints: ${attr.stats.rankPoints}
-                    Wins: ${attr.stats.wins}
-                    GamesPlayed: ${attr.stats.games}
-                    WinRatio: ${attr.stats.winRatio}
-                    AverageDamage: ${attr.stats.averageDamage}
-                    Kills: ${attr.stats.kills}
-                    KillDeathRatio: ${attr.stats.killDeathRatio}
-                    AverageRank: ${attr.stats.averageRank}
-                    ----------------------------------------
-                `);*/
                 return {
                     playerName: attr.name,
                     rank: attr.rank,
@@ -126,6 +113,7 @@ module.exports = function(qfns, queries) {
                 };
             });
             //console.log(`Leaderboard for ${}`)
+            //console.log(ranked);
             return ranked;
         },
         getWeaponsMasteryHandler: (res) => {

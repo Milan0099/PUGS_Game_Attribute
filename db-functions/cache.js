@@ -19,13 +19,13 @@ module.exports = function(configs, memcached) {
             if(!key || !cb) {
                 throw new Error('Key and/or callback for cache._get cannot be undefined');
             }
-            this.cache.get(key, cb.bind(this));
+            this.cache.get(key, cb);
         }
         _set(key, value, cb, life = MAX_EXPIRATION) {
             if(!key || !value || !cb) {
                 throw new Error('Key, value and/or callback undefiend');
             }
-            this.cache.set(key, value, life, cb.bind(this));
+            this.cache.set(key, value, life, cb);
         }
         // actual cache functions
         async getPlayerMatches(playerName) {

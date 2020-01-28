@@ -1,11 +1,11 @@
 module.exports = function(squel) {
     return {
-        seasons: (platform = '') => {
-            const t = platform ? `seasons_${platform}` : `seasons`;
+        seasons: (platform = 'steam') => {
+            const t = `seasons_${platform}`;
             return squel
                 .select().from(t)
                 .order('_id', false)
-                .limit(5).toString();
+                .limit(2).toString();
         },
         insertSeasons: (seasons, platform) => {
             const s = seasons.map(season => { 
@@ -91,7 +91,8 @@ module.exports = function(squel) {
                 .setFieldsRows(p)
                 .toString();
         },
-        insertSeasonsLeaderboard: (seasonId, gameMode, leaders) => {
+        insertSeasonsLeaderboard: (seasonId, gameMode, platform, leaders) => {
+            const t =`leaderboard_${platform}`;
             const l = leaders.map(lead => {
                 return {
                     season_id: seasonId,
@@ -109,7 +110,7 @@ module.exports = function(squel) {
                 };
             });
             return squel.insert()
-                .into('leaderboards')
+                .into(t)
                 .setFieldsRows(l).toString();
         },
         insertSteamPlayerStats: (stats) => {
@@ -149,6 +150,21 @@ module.exports = function(squel) {
                 .fields(['month, average_players, gain, gain_percentage, peak'])
                 .order('_id', false)
                 .toString();
+        },
+        insertVisitor: (info)  => {
+            return squel.insert()
+                .into('visitor')
+                .setFieldsRows([{
+                    player_name: info.playerName ? info.playerName : null,
+                    ip: info.ip ? info.ip : null,
+                    country: info.country ? info.country : null,
+                    country_code: info.countryCode ? info.countryCode : null,
+                    continent: info.continent ? info.continent : null,
+                    continent_code: info.continentCode ? info.continentCode : null,
+                    account_id: info.accountId ? info.accountId : null
+                }])
+                .toString();
+                
         }
     };
 };
