@@ -61,10 +61,10 @@ const IpLookup = require('./ip-lookup')(axios, configs);
 const ACCESS_CTRL_MAX_AGE = 3600 * 2; // 2 hours
 const MYSQL_POOL_MAX_CONNECTIONS = 5; 
 const COOKIE_MAX_AGE = 3600; //  1hr; for prod, make it 7 days
-const VIEWSDIR = '/home/zerocool/freelancer/pubginfo/views';
-const ASSETSDIR = '/home/zerocool/freelancer/pubginfo/assets';
-const FAVSDIR = '/home/zerocool/freelancer/pubginfo/favs';
-const SCRIPTSDIR = '/home/zerocool/freelancer/pubginfo/scripts';
+const VIEWSDIR = '/srv/www/pubg-stats/views';
+const ASSETSDIR = '/srv/www/pubg-stats/assets';
+const FAVSDIR = '/srv/www/pubg-stats/favs';
+const SCRIPTSDIR = '/srv/www/pubg-stats/scripts';
 
 ////// SERVER SETUP    \\\\\\\\\\\\\\\\\\\\\\\\\\
 const server = express();
