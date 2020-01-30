@@ -14,6 +14,7 @@
     "axios": "^0.19.1",
     "body-parser": "^1.19.0",
     "chart.js": "^2.9.3",
+    "chartist-plugin-legend": "^0.6.2",
     "connect-memcached": "^1.0.0",
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",

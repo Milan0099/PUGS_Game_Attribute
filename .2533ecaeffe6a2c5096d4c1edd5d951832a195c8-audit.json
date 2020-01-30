@@ -54,6 +54,16 @@
             "date": 1580199486131,
             "name": "log-2020-01-28.log",
             "hash": "f8c03b8fd350666c97fe47572ede96a9"
+        },
+        {
+            "date": 1580235876560,
+            "name": "log-2020-01-29.log",
+            "hash": "80fee64d5584f2a071f6d867f0f9083a"
+        },
+        {
+            "date": 1580321369860,
+            "name": "log-2020-01-30.log",
+            "hash": "fbd82ae6eac2d58c406e0f5c40ff1634"
         }
     ]
 }

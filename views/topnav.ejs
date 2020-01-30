@@ -6,13 +6,13 @@
                 { href:"/", value: "Home", isActive: false },
                 { href:"/leaderboard", value: "Leaderboard", isActive: false },
                 { href: "/player", value: "Player Lookup", isActive: false},
-                { href:"/seasons", value: "Seasons", isActive: false },
-                { href:"/weaponsMastery", value:"Weapons Mastery", isActive: false }
+                { href:"/weaponsMastery", value:"Weapons Mastery", isActive: false },
+                { href: "/telemetry", value: "Telemetry", isActive: false }
             ]; %>
             <ul id="mobile-nav" class="right hide-on-med-down">
                 <% links.forEach(function(link){ %>
-                    <li class=<%= active === link.value ? "active" : "" %>>
-                        <a href=<%= link.href %>> 
+                    <li class="<%= active === link.value ? 'active' : '' %>" onclick="changeMenu(this)">
+                        <a href="<%= link.href %>">
                             <%= link.value %>
                         </a>
                     </li>

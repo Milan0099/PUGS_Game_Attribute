@@ -233,10 +233,10 @@ server.get('/player', async (req, res, nxt) => {
     res.render('playerStats', { playerName: '' });
 });
 
-server.use('/:playerName', express.static(ASSETSDIR));
-server.use('/:playerName', express.static(FAVSDIR));
-server.use('/:playerName', express.static(SCRIPTSDIR));
-server.get('/:playerName', async (req, res, nxt) => {
+server.use('/player/:playerName', express.static(ASSETSDIR));
+server.use('/player/:playerName', express.static(FAVSDIR));
+server.use('/player/:playerName', express.static(SCRIPTSDIR));
+server.get('/player/:playerName', async (req, res, nxt) => {
     const { playerName } = req.params;
     if(!playerName) {
         return res.render('404');
@@ -263,10 +263,10 @@ server.get('/:playerName', async (req, res, nxt) => {
 });
 
 
-server.use('/:platform/:playerName', express.static(ASSETSDIR));
-server.use('/:platform/:playerName', express.static(FAVSDIR));
-server.use('/:platform/:playerName', express.static(SCRIPTSDIR));
-server.get('/:platform/:playerName', async(req, res, nxt) => {
+server.use('/player/:platform/:playerName', express.static(ASSETSDIR));
+server.use('/player/:platform/:playerName', express.static(FAVSDIR));
+server.use('/player/:platform/:playerName', express.static(SCRIPTSDIR));
+server.get('/player/:platform/:playerName', async(req, res, nxt) => {
     // update the cache with player name; if not exists, throw 500
     const { platform, playerName } = req.params;
     if(!playerName) {
@@ -304,7 +304,7 @@ server.get('/:platform/:playerName', async(req, res, nxt) => {
     }
     nxt();
 });
-server.get('/:platform/:playerName', async (req, res, nxt) => {
+server.get('/player/:platform/:playerName', async (req, res, nxt) => {
     // lookup player from api; if found, show stats; else 404
     console.log('cookie.p');
     req.cookies && console.log(req.cookies.p);
@@ -365,6 +365,95 @@ server.get('/:platform/:playerName', async (req, res, nxt) => {
         
     } catch(lookupErr) {
         console.error(lookupErr);
+    }
+});
+
+server.use('/weaponsMastery', express.static(ASSETSDIR));
+server.use('/weaponsMastery', express.static(FAVSDIR));
+server.use('/weaponsMastery', express.static(SCRIPTSDIR));
+server.get('/weaponsMastery', async (req, res, nxt) => {
+    let pname = "";
+    if(req.cookies && req.cookies.p) {
+        pname = req.cookies.p.playerName;
+    }
+    res.render('weapons-stats', { activePlatform: 'steam', playerName: pname, stats: null });
+});
+
+server.use('/weaponsMastery/:platform/:playerName', express.static(ASSETSDIR));
+server.use('/weaponsMastery/:platform/:playerName', express.static(FAVSDIR));
+server.use('/weaponsMastery/:platform/:playerName', express.static(SCRIPTSDIR));
+server.get('/weaponsMastery/:platform/:playerName', async (req, res, nxt) => {
+    const { platform, playerName } = req.params;
+    let pname;
+    if(!platform) {
+        return res.render('404');
+    }
+    if(req.cookies && req.cookies.p) {
+        console.log(`[-] Cookie Player Name: ${req.cookies.p.playerName}`);
+        pname = req.cookies.p.playerName;
+    }
+    if(!playerName && !pname) {
+        return res.render('500');
+    }
+    // lookup weapons stats
+    try {
+        let pid;
+        if(!req.cookies && !req.cookies.p && req.cookies.p.playerId) {
+            // lookup
+            try {
+                const resPlayer = await pubgApi.getPlayer(playerName, platform);
+                pid = pubgApiHandlers.getPlayerHandler(resPlayer);
+            } catch(idLkUpErr) {
+                console.error(idLkUpErr);
+                return res.render('404');
+            }
+        }
+        else {
+            pid = req.cookies.p.playerId;
+        }
+        const resStats = await pubgApi.getWeaponsMastery(pid, platform);
+        const stats = pubgApiHandlers.getWeaponsMasteryHandler(resStats);
+        res.render('weapons-stats', { activePlatform: 'steam', playerName: pname, stats: stats });
+    } catch(lkupErr) {
+        console.error(lkupErr);
+        res.render('500');
+    }
+});
+
+server.use('/telemetry', express.static(ASSETSDIR));
+server.use('/telemetry', express.static(FAVSDIR));
+server.use('/telemetry', express.static(SCRIPTSDIR));
+server.get('/telemetry', async (req, res, nxt) => {
+    
+    res.render('telemetry');
+});
+
+server.get('/getTelemetries', async (req, res, nxt) => {
+    try {
+        const telem = await new Promise((resolve, reject) => {
+            const q = `
+                SELECT * FROM regional_modes_stats;
+            `;
+            DBPool.query(q, (err, stats) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(stats);
+                }
+            });
+        });
+        const resActivePlayersSteam = await steamApi.getPlayersCount();
+        const activePlayersSteam = resActivePlayersSteam.data.response.player_count;
+        console.log(activePlayersSteam);
+        res.json({
+            status: 200,
+            stats: telem,
+            activePlayersSteam: activePlayersSteam
+        });
+    } catch(err) {
+        console.error(err);  
+        res.render('500');
     }
 });
 

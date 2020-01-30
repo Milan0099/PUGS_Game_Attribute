@@ -166,7 +166,7 @@
     #player-info-card-action-col a.btn {
         flex: 0.10;
     }
-    #player-info-name-input {
+    .player-name-input {
         background-color: white;
         font-size: 24px;
         color: #f2a900;
@@ -211,6 +211,13 @@
     .other-stat-card {
         background-color: #22333b;
         color: white;
+    }
+    .telem-row {
+        width: 100%;
+        margin-bottom: 30px;
+    }
+    .telem-col {
+        width: 49%;
     }
     /* Utility classes */
     .horizontal-full-width-spacer {
@@ -258,4 +265,36 @@
         font-family: 'Noto Sans JP', sans-serif;
         font-size: 14px;
     }
+    .value {
+        color: gray;
+        font-weight: 600;
+        font-family: 'Noto Sans JP', sans-serif;
+        font-size: 32px;
+        margin-left: 25px;
+    }
+    #preloader {
+        margin: 0 auto !important;
+        width: 500px;
+        height: 500px;
+        position: fixed !important;
+        top: 25% !important;
+        left: 35% !important;
+    }
+    .dont-show {
+        display: none;
+    }
+    .dropdown-content li > span {
+        color: #f2a900;
+        font-size: 14px;
+        font-family: 'Noto Sans JP', sans-serif;
+        font-weight: 400;
+    }
+    .select-wrapper input {
+        color: #f2a900;
+        font-size: 14px;
+        font-family: 'Noto Sans JP', sans-serif;
+        font-weight: 400;
+    }
 }
+
+/* Chartist Props */

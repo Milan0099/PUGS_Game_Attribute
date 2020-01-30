@@ -15,7 +15,7 @@ module.exports = function(axios, apikey, appID) {
             });
         },
         getPlayersCount: () => {
-            return axiosInstance.get('ISteamISteamUserStats/GetNumberOfCurrentPlayers/v1', {
+            return axiosInstance.get('ISteamUserStats/GetNumberOfCurrentPlayers/v1', {
                 params: {
                     appid: appID
                 }
