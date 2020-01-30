@@ -180,7 +180,7 @@ const getTelemetries = () => {
             const keys = Object.keys(MAPPINGS).sort();
 
             // add active player count
-            act.innerHTML = data.activePlayerSteam;
+            act.innerHTML = data.activePlayersSteam;
 
             // create 2 rows
             const regSel = document.querySelector('#region-sel');
