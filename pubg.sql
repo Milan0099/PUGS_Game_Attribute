@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jan 30, 2020 at 01:51 AM
+-- Generation Time: Jan 31, 2020 at 11:20 PM
 -- Server version: 10.2.25-MariaDB
 -- PHP Version: 7.2.5
 
@@ -17170,6 +17170,13 @@ CREATE TABLE `visitor` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Dumping data for table `visitor`
+--
+
+INSERT INTO `visitor` (`_id`, `player_name`, `ip`, `country`, `country_code`, `continent`, `continent_code`, `account_id`) VALUES
+(1, 'MyCholula', NULL, NULL, NULL, NULL, NULL, 'account.61582d64985646a2a7208340b6f86d06');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -17358,7 +17365,7 @@ ALTER TABLE `tournaments`
 -- AUTO_INCREMENT for table `visitor`
 --
 ALTER TABLE `visitor`
-  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables

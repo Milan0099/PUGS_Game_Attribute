@@ -2,6 +2,9 @@
     <nav>
         <div id="topNav-ul" class="nav-wrapper">
             <a href="/" class="brand-logo" id="nav-site-name">pubgstats.info</a>
+            <a href="#" data-target="mobile-nav" class="sidenav-trigger right">
+                <i class="material-icons">menu</i>
+            </a>
             <% var links = [ 
                 { href:"/", value: "Home", isActive: false },
                 { href:"/leaderboard", value: "Leaderboard", isActive: false },
@@ -9,7 +12,7 @@
                 { href:"/weaponsMastery", value:"Weapons Mastery", isActive: false },
                 { href: "/telemetry", value: "Telemetry", isActive: false }
             ]; %>
-            <ul id="mobile-nav" class="right hide-on-med-down">
+            <ul class="right hide-on-med-and-down">
                 <% links.forEach(function(link){ %>
                     <li class="<%= active === link.value ? 'active' : '' %>" onclick="changeMenu(this)">
                         <a href="<%= link.href %>">
@@ -21,3 +24,12 @@
         </div>
     </nav>
 </div><!-- Navbar Ends -->
+<ul id="mobile-nav" class="sidenav">
+    <% links.forEach(function(link){ %>
+        <li class="<%= active === link.value ? 'active' : '' %>" onclick="changeMenu(this)">
+            <a href="<%= link.href %>">
+                <%= link.value %>
+            </a>
+        </li>
+    <% }); %>
+</ul>

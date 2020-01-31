@@ -30,6 +30,7 @@ require('winston-daily-rotate-file');
 const configs = require('./configs.json');
 const pubgStatsJson = require('./pubg-stats.json');
 const mapNames = require('./mapName.json');
+const mapStats = require('./stats.json');
 
 /////// LOGGER  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 const transport = new winston.transports.DailyRotateFile({
@@ -61,10 +62,11 @@ const IpLookup = require('./ip-lookup')(axios, configs);
 const ACCESS_CTRL_MAX_AGE = 3600 * 2; // 2 hours
 const MYSQL_POOL_MAX_CONNECTIONS = 5; 
 const COOKIE_MAX_AGE = 3600; //  1hr; for prod, make it 7 days
-const VIEWSDIR = '/srv/www/pubg-stats/views';
-const ASSETSDIR = '/srv/www/pubg-stats/assets';
-const FAVSDIR = '/srv/www/pubg-stats/favs';
-const SCRIPTSDIR = '/srv/www/pubg-stats/scripts';
+const BASEDIR = '/home/zerocool/freelancer/pubginfo/';
+const VIEWSDIR = BASEDIR + 'views';
+const ASSETSDIR = BASEDIR + 'assets';
+const FAVSDIR = BASEDIR + 'favs';
+const SCRIPTSDIR = BASEDIR + 'scripts';
 
 ////// SERVER SETUP    \\\\\\\\\\\\\\\\\\\\\\\\\\
 const server = express();
@@ -143,69 +145,28 @@ server.get('/*', async (req, res, nxt) => {
 server.get('/', async (req, res, nxt) => {
     const ip = req.ip;
     console.log(`IP: ${ip}`);
-    //console.log(req.session);
     if(req.cookies && req.cookies.loc) {
         console.log('cookie already set');
         return res.render('index');
-    }
-    const data = await new Promise((resolve, reject) => {
-        CachePool._get(ip, async (err, pl) => {
-            let resIp;
-            let data;
-            if(err) {
-                // lookup and insert
-                console.log('[-] Looking up IP');
-                if(ip.startsWith('::1') === true || ip.startsWith('127.0.0.1') === true) {
-                    resIp = '127.0.0.1';
-                }
-                else {
-                    resIp = await IpLookup(ip);
-                }
-                data = (typeof resIp === 'string' ? 
-                    { country: 'Bangladesh', country_code: 'BD', 
-                    continent: 'Asia', continent_code: 'AS'} : resIp.data);
-                console.log('cookie');
-                console.log(req.cookies);
-                await new Promise((resolve2, reject2) => { 
-                    console.log('[-] Saving IP: ' + ip);
-                    CachePool._set(ip, JSON.stringify(data), (serr) => {
-                        if(serr) {
-                            console.error(serr);
-                            reject2(serr);
-                        }
-                        else {
-                            console.log('[-] IP Saved');
-                            resolve2();
-                        }
-                    });
-                });     
-            }
-            // found in cache
-            else {
-                console.log(req.cookies);
-                console.log(pl);
-            }
-            resolve(data);
-        });
-    });
-    if(req.cookies && !req.cookies.loc) {
-        console.log('setting cookie');
-        res.cookie('loc', JSON.stringify(data), {
-            httpOnly: true,
-            sameSite: false,
-            maxAge: 1000 * 3600,
-            domain: '/'
-        });
     }
     res.render('index');
 });
 server.get('/leaderboard', async(req, res, nxt) => {
     // lookup current leaderboard
-    const resLeaders = await pubgApi.getSeasonLeaderboard(
-        'division.bro.official.pc-2018-05', 'solo', 0, 'steam');
-    const leaders = pubgApiHandlers.getSeasonLeaderboardHandler(resLeaders);
-    //console.log(leaders);
-    res.render('leaderboard', { leaderboard: leaders, modeActive: 'solo', platform: 'steam' });
+    try {
+        const resLeaders = await pubgApi.getSeasonLeaderboard(
+            'division.bro.official.pc-2018-05', 'solo', 0, 'steam');
+        const leaders = pubgApiHandlers.getSeasonLeaderboardHandler(resLeaders);
+        //console.log(leaders);
+        res.render('leaderboard', { leaderboard: leaders, modeActive: 'solo', platform: 'steam' });
+    } catch(lkupErr) {
+        if(lkupErr.response && lkupErr.response.status && lkupErr.response.status === 404) {
+            res.render('404');
+        } 
+        else {
+            res.render('500');
+        }
+    }
 });
 
 // setup the static directory root 
@@ -214,11 +175,37 @@ server.use('/leaderboard/:platform/:gameMode', express.static(FAVSDIR));
 server.use('/leaderboard/:platform/:gameMode', express.static(SCRIPTSDIR));
 server.get('/leaderboard/:platform/:gameMode', async(req, res, nxt) => {
     let { platform, gameMode } = req.params;
-    if(!platform || platform === 'steam') {
-        platform = ''; // steam by default 
+    if(!platform) {
+        platform = 'steam'; // steam by default 
     }
     if(!gameMode) {
-        gameMode = 'solo'
+        gameMode = 'solo';
+    }
+    try {
+        // lookup recent season for platform
+        const seas = await new Promise((resolve, reject) => {
+            DBPool.query(queries.seasons(platform), (err, seas) => {
+                if(err) {
+                    reject(err);
+                }
+                else {
+                    resolve(seas);
+                }
+            });
+        });
+        const current = seas[0];
+        // get the ledaerboard
+        const resLeaders = await pubgApi.getSeasonLeaderboard(current.season_id, gameMode, 0, platform);
+        const leaders = pubgApiHandlers.getSeasonLeaderboardHandler(resLeaders);
+        res.render('leaderboard', { leaderboard: leaders, modeActive: gameMode, platform: platform });
+    } catch(lkupErr) {
+        if(lkupErr.response && lkupErr.response.status && lkupErr.response.status === 404) {
+            res.render('404');
+        } 
+        else {
+            console.error(lkupErr);
+            res.render('500');
+        }
     }
     
 });
@@ -245,24 +232,10 @@ server.get('/player/:playerName', async (req, res, nxt) => {
     if(req.cookies && req.cookies.p) {
         console.log('[-] Cookie set already');
     }
-    else if(req.cookies && !req.cookies.p) {
-        console.log('[-] Setting player cookie');
-        console.log(playerName);
-        const p = { playerName: playerName };
-        res.cookie('p', JSON.stringify(p), {
-            httpOnly: true,
-            sameSite: false,
-            maxAge: 3600 * 1,
-            domain: '/'
-        });
-    }
-    else {
-        console.error(new Error('[!] Unknown Error: No Cookie with request'));
-    }
     res.render('playerStats', { playerName: playerName });
 });
 
-
+/*
 server.use('/player/:platform/:playerName', express.static(ASSETSDIR));
 server.use('/player/:platform/:playerName', express.static(FAVSDIR));
 server.use('/player/:platform/:playerName', express.static(SCRIPTSDIR));
@@ -303,29 +276,61 @@ server.get('/player/:platform/:playerName', async(req, res, nxt) => {
         });
     }
     nxt();
-});
+});*/
 server.get('/player/:platform/:playerName', async (req, res, nxt) => {
     // lookup player from api; if found, show stats; else 404
-    console.log('cookie.p');
-    req.cookies && console.log(req.cookies.p);
+    const ip = req.ip;
     try {
-        const { platform, playerName } = req.params;
+        let { platform, playerName } = req.params;
         if(!platform) {
             platform = 'steam'; // default
         }
         if(!playerName) {
+            console.log(`PlayerName not submitted? ${playerName}`);
             return res.render('404');
         }
         // add code to lookup db first
+        let wasCached = false;
+        const pn = await new Promise((resolve, reject) => {
+            const q = `
+            SELECT player_name, account_id from visitor WHERE player_name LIKE '${playerName}'  
+            `;
+            DBPool.query(q, (err, row) => {
+                if(err) {
+                    console.log('[-] No user matching that name in db');
+                    resolve(playerName); // use the user provided one
+                }
+                else {
+                    if(row && row.length > 0) {
+                        resolve(row[0]);
+                    }
+                    else {
+                        resolve(playerName);
+                    }
+                }
+            });
+        });
+        if(pn) {
+            wasCached = true;
+        }
+        if(pn.player_name) {
+            playerName = pn.player_name;
+        }
         let resPlayer, playerId;
-        if(!req.cookies || (req.cookies && !req.cookies.p)) {
-            resPlayer = await pubgApi.getPlayer(playerName, platform);
-            playerId = pubgApiHandlers.getPlayerHandler(resPlayer);
+        if(pn.account_id) {
+            playerId = pn.account_id;
         }
         else {
-            console.log('[-] Using cookie value');
-            playerId = req.cookies.p.playerId;
+            try {
+                resPlayer = await pubgApi.getPlayer(playerName, platform);
+                playerId = pubgApiHandlers.getPlayerHandler(resPlayer);
+            } catch(idLkUpErr) {
+                // nothing else to ;(
+                    return res.render('404');   
+            }
         }
+        
+        console.log(`PlayerName: ${playerName}  ID: ${playerId}  Platform: ${platform}`);
         const recentSeasons = await new Promise((resolve, reject) => {
             DBPool.query(queries.seasons(platform), (gerr, seas) => {
                 if(gerr) {
@@ -334,7 +339,6 @@ server.get('/player/:platform/:playerName', async (req, res, nxt) => {
                 resolve(seas);
             });
         });
-        console.log(`PlayerId: ${playerId}`);
         if(!recentSeasons) {
             return res.render('500');
         }
@@ -345,26 +349,32 @@ server.get('/player/:platform/:playerName', async (req, res, nxt) => {
                 let stats = pubgApiHandlers.getPlayerSeasonLifetimeStatsHandler(resstats);
                 sts.push(stats);
             } catch(plLookUpError) {
-                console.error(plLookUpError);                
+                console.log('Throwing here');
+                console.error(plLookUpError);
+                return res.render('404');                
             }
         }
-        console.log(sts);
-        if(req.cookies && (!req.cookies.p || !req.cookies.p.playerId)) {
-            res.cookie('p', JSON.stringify({
-                playerName: playerName,
-                playerId: playerId
-            }), {
-                httpOnly: true,
-                sameSite: false,
-                maxAge: 3600 * 2,
-                domain: '/'
+        const vq = `
+            INSERT INTO visitor(player_name, account_id)
+            VALUES ('${playerName}', '${playerId}');
+        `;
+        if(!wasCached) {
+            DBPool.query(vq, (err, inserted) => {
+                if(err) {
+                    console.log('[x] Error while inserting visitor');
+                    console.error(err);
+                }
+                else {
+                    console.log('[*] Visitor with ' + ip + ' inserted');
+                }
             });    
         }
         res.render('playerStatsDetails', { stats: sts, activePlatform: platform, playerName: playerName });
-        // save in db!
         
     } catch(lookupErr) {
+        console.log('Throwing at the end');
         console.error(lookupErr);
+        return res.render('404');
     }
 });
 
@@ -449,7 +459,9 @@ server.get('/getTelemetries', async (req, res, nxt) => {
         res.json({
             status: 200,
             stats: telem,
-            activePlayersSteam: activePlayersSteam
+            activePlayersSteam: activePlayersSteam,
+            mapNames: mapNames,
+            mapStats: mapStats
         });
     } catch(err) {
         console.error(err);  

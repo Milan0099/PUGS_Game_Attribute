@@ -3,9 +3,14 @@
     <%- include('header') %>
     <body>
         <%- include('topnav', { active: 'home' }) %>
-        <div class="horizontal-spacer"></div>
-        <div class="error-container">
-            <h1>No such leaderboard found</h1>
+        <div class="horizontal-full-width-spacer"></div>
+        <div class="container error-container">
+            <h1 class="err-text">No such leaderboard found</h1>
+            <p>
+                Go back to <a class="link" href="/">Home</a>.
+                &nbsp; To lookup again, click <a class="link" href="/player">here.</a>
+            
+            </p>
         </div>
     </body>
 </html>

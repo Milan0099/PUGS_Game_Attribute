@@ -97,6 +97,7 @@ const searchPlayer = (event) => {
     const URL = BASEURL.concat(['player/' + `${name}`]);
     console.log(`Searching for ${name}`);
     console.log(`URL: ${URL}`);
+    //window.location.href = URL;
     window.location.href = URL;
     return false;
 };
@@ -111,9 +112,18 @@ const selectPlatformPlayerStats = (li) => {
     li && li.classList && li.classList.add('selected');
 };
 const getPlayerStats = () => {
-    const formInput = document.querySelector('#player-info-card')
-        .querySelector('form').querySelector('input');
-    const name = formInput.getAttribute('value');
+    const formInput = document.querySelector('#player-info-name-input');
+    let name = formInput.value; // problem; since ejs sets it to '', must submit and try 
+    console.log(`Submitted first: ${name}`);
+    if(!name) {
+        // submit form 
+        const form = document.querySelector('#player-stats-name-form');
+        form.onsubmit = () => { return false; }
+        form.submit();
+        const fi = form.querySelector('#player-info-name-input');
+        console.log(`PlayerName: ${fi.value}`);
+        return ;
+    }
     const ul = document.querySelector('#player-info-platform-sel');
     const lis = ul.querySelectorAll('li');
     let li;
@@ -123,48 +133,212 @@ const getPlayerStats = () => {
     const platform = li.getAttribute('value');
     window.location.href = BASEURL.concat(['player/' + `${platform}` + `/${name}`]);
 };
+const parseModeData = (mode, arr) => {
+    let a = [];
+    arr.forEach(e => a.push(e[mode]));
+    console.log(`MOde: ${mode}  ==> ${a.toString()}`);
+    return a;
+}
 const showRegionalModeStats = () => {
     if(!TELEMETRY_STATS) {
         return console.log('[x] No telemetry data cached');
     }
-    const mdist = document.querySelector('#mdist-region');
-    const labs = [ 'Solo', 'Duo', 'Squad', 'solo-Fpp', 'Duo-Fpp', 'Squad-Fpp'];
+    const mdist = document.querySelector('#mdist-region').getContext('2d');
     const pc = TELEMETRY_STATS.filter(s => s.platform === 'pc');
-    const ul = document.querySelector('ul');
-    const lis = ul.querySelectorAll('li');
-    let sel;
-    for(const li of lis) {
-        if(li.classList.contains('selected')) {
-            sel = li;
-            break;
-        }
-    }
-    const reg = sel.querySelector('span').innerHTML;
-    const st = pc.filter(p => p.name === reg)[0];
-    const data = [
-        st.solo, st.duo, st.squad, st.solo_fpp, st.duo_fpp, st.squad_fpp
-    ];
-    new Chart(document.querySelector('#match-distribution'), {
-        type: 'pie',
+    const sorted = pc.sort((a, b) => {
+        if(a.name > b.name) return 1;
+        else if(a.name < b.name) return -1;
+        else return 0;
+    });
+    
+    new Chart(mdist, {
+        type: 'bar',
         data: {
-            datasets: [
-                {
-                    data: data,
-                    fill: true,
-                    backgroundColor: [
-                        'rgb(210, 191, 85)',
-                        'rgb(164, 249, 200)',
-                        'rgb(170, 80, 66)',
-                        'rgb(63, 48, 71)',
-                        'rgb(14, 173, 105)',
-                        'rgb(238, 66, 102)'
-                    ]
+            labels: Object.keys(MAPPINGS).sort(),
+            datasets: [{
+                label: 'Solo',
+                backgroundColor: "rgb(232, 211, 63)",
+                data: parseModeData('solo', sorted),
+            }, {
+                label: 'Duo',
+                backgroundColor: "rgb(209, 123, 15)",
+                data: parseModeData('duo', sorted),
+            }, {
+                label: 'Squad',
+                backgroundColor: "rgb(183, 173, 207)",
+                data: parseModeData('squad', sorted),
+            }, {
+                label: 'Solo FPP',
+                backgroundColor: 'rgb(241, 81, 82)',
+                data: parseModeData('solo_fpp', sorted)
+            }, {
+                label: 'Duo FPP',
+                backgroundColor: 'rgb(53, 59, 60)',
+                data: parseModeData('duo_fpp', sorted)
+            }, {
+                label: 'Squad FPP',
+                backgroundColor: 'rgb(64, 112, 118)',
+                data: parseModeData('squad_fpp', sorted)
+            }],
+        },
+        options: {
+            tooltips: {
+            displayColors: true,
+            },
+            scales: {
+            xAxes: [{
+                stacked: true,
+                gridLines: {
+                display: false,
                 }
-            ],
-            labels: labs
+            }],
+            yAxes: [{
+                stacked: true,
+                ticks: {
+                beginAtZero: true,
+                },
+                type: 'linear',
+            }]
+            },
+            responsive: true,
         }
     });
-}
+};
+const parseMapData = (mode, mnames, stats) => {
+    const d = [];
+    for(const r of Object.keys(stats)) {
+        for(const m of mnames) {
+            if(stats[r][m] && stats[r][m][mode] >= 0) {
+                d.push(stats[r][m][mode]);
+            }
+        }
+    }
+    return d;
+};
+const showRegionMapCharts = (mapNames, mapStats) => {
+    const ctx = document.querySelector('#mdist-maps');
+    const ctx2 = document.querySelector('#reg-maps');
+    const snames = Object.keys(mapNames).sort();
+    const colors = {
+        'Baltic_Main': "rgb(232, 211, 63)",
+        'Desert_Main': "rgb(209, 123, 15)",
+        'DihorOtok_Main': "rgb(183, 173, 207)",
+        'Erangel_Main': "rgb(241, 81, 82)",
+        'Range_Main': "rgb(53, 59, 60)",
+        'Savage_Main': "rgb(64, 112, 118)",
+        'Summerland_Main': "rgb(116,179,206)"
+    };
+    const anames = snames.map(n => mapNames[n]);
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: anames,
+            datasets: [
+                {
+                    label: 'Solo',
+                    backgroundColor: "rgb(232, 211, 63)",
+                    data: parseMapData('solo', snames, mapStats)
+                },
+                {
+                    label: 'Duo',
+                    backgroundColor: 'rgb(209, 123, 15)',
+                    data: parseMapData('duo', snames, mapStats) 
+                },
+                {
+                    label: 'Squad',
+                    backgroundColor: 'rgb(183, 173, 207)',
+                    data: parseMapData('squad', snames, mapStats)
+                },
+                {
+                    label: 'Solo FPP',
+                    backgroundColor: 'rgb(241, 81, 82)',
+                    data: parseMapData('solo-fpp', snames, mapStats)
+                },
+                {
+                    label: 'Duo FPP',
+                    backgroundColor: 'rgb(53, 59, 60)',
+                    data: parseMapData('duo-fpp', snames, mapStats)
+                },
+                {
+                    label: 'Squad FPP',
+                    backgroundColor: 'rgb(64, 112, 118)',
+                    data: parseMapData('squad-fpp', snames, mapStats)
+                }
+            ],
+        },
+        options: {
+            tooltips: {
+            displayColors: true,
+            },
+            scales: {
+            xAxes: [{
+                stacked: true,
+                gridLines: {
+                display: false,
+                }
+            }],
+            yAxes: [{
+                stacked: true,
+                ticks: {
+                beginAtZero: true,
+                },
+                type: 'linear',
+            }]
+            },
+            responsive: true,
+        }
+    });
+    const rm = [];
+    const b = Object.keys(MAPPINGS).sort();
+    for(const mp of snames) {
+        let d = [];
+        for(const reg of b) {
+            let t = 0;
+            if(!mapStats[reg][mp]) {
+                continue;
+            }
+            for(const mattype of Object.keys(mapStats[reg][mp])) {
+                t += mapStats[reg][mp][mattype];
+            }
+            d.push(t);
+        }
+        rm.push({
+            label: mapNames[mp],
+            backgroundColor: colors[mp],
+            data: d
+        })
+    }
+    console.log(rm);
+    new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: b,
+            datasets: rm
+        },
+        options: {
+            tooltips: {
+            displayColors: true,
+            },
+            scales: {
+            xAxes: [{
+                stacked: true,
+                gridLines: {
+                display: false,
+                }
+            }],
+            yAxes: [{
+                stacked: true,
+                ticks: {
+                beginAtZero: true,
+                },
+                type: 'linear',
+            }]
+            },
+            responsive: true,
+        }
+    });
+
+};
 const getTelemetries = () => {
     $.ajax({
         url: `${BASEURL}getTelemetries`,
@@ -181,26 +355,6 @@ const getTelemetries = () => {
 
             // add active player count
             act.innerHTML = data.activePlayersSteam;
-
-            // create 2 rows
-            const regSel = document.querySelector('#region-sel');
-            let first = true;
-            for(const opt of keys) {
-                const o = document.createElement('option');
-                if(first) {
-                    o.classList.add('selected');
-                    first = false;
-                }
-                o.value = opt;
-                o.innerHTML = opt;
-                regSel.appendChild(o);
-            }
-            // init Selector
-            M.FormSelect.init(regSel);
-            const selectWrapper = document.querySelector('.select-wrapper');
-            const regSelInput = selectWrapper.querySelector('input');
-            regSelInput.addEventListener('onchange', showRegionalModeStats);
-            
 
             let tpp = 0; 
             let fpp = 0;
@@ -276,11 +430,10 @@ const getTelemetries = () => {
             });
 
             // show regional stat
-            
-            //showRegionalModeStats();
+            showRegionalModeStats();
+            showRegionMapCharts(data.mapNames, data.mapStats);
             document.querySelector('#preloader').classList.remove('active');
             cont.classList.remove('dont-show');
-            //document.querySelector('select').formSelect();
         }
     });
 };
