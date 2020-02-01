@@ -1,4 +1,4 @@
-const BASEURL = 'https://pubgstats.info/';
+const BASEURL = 'https://127.0.0.1:4200/';
 const MAPPINGS = {
     'Asia': 'as',
     'Europe': 'eu',
