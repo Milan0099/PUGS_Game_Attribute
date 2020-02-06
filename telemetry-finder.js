@@ -216,12 +216,7 @@ const updater = async () => {
 };
 
 if(!module.parent) {
-    let up = true;
     setInterval(async () => {
-        if(up) {
-            up = false;
-            await updater();
-            up = true;
-        }
-    }, 1000 * 60 * 10);
+        await updater();
+    }, 1000);
 }
