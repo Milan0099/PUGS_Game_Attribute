@@ -11,7 +11,7 @@
     "Baltic_Main": {
       "solo": 0,
       "duo": 0,
-      "squad": 3,
+      "squad": 5,
       "solo-fpp": 0,
       "duo-fpp": 0,
       "squad-fpp": 1
@@ -53,7 +53,7 @@
     "Baltic_Main": {
       "solo": 0,
       "duo": 0,
-      "squad": 3,
+      "squad": 4,
       "solo-fpp": 0,
       "duo-fpp": 1,
       "squad-fpp": 2
