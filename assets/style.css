@@ -321,6 +321,41 @@
     .link:hover {
         text-decoration: #f2a900 underline;
     }
+    #overview-list {
+        list-style: none;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+    .overview-list-item {
+        padding: 12px;      
+    }
+    .overview-list-item-label {
+        display: block;
+        font-size: 15px;
+        font-family: 'Noto Sans JP', sans-serif;
+        font-weight: 600;
+        color: rgb(92, 92, 92);
+    }
+    .overview-list-item-value {
+        color: #f2a900;
+        font-family: 'Noto Sans JP', sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        display: block;
+    }
+    .header {
+        color: #f2a900;
+        font-size: 18px;
+        font-weight: 700;
+        font-family: 'Noto Sans JP', sans-serif;
+    }
+    /* canvas properties */
+    canvas {
+        height: 100% !important;
+        width: 100% !important;
+    }
 }
 
 @media screen and (min-width: 540px) {
@@ -646,6 +681,40 @@
     .link:hover {
         text-decoration: #f2a900 underline;
     }
+    #overview-list {
+        list-style: none;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+    .overview-list-item {
+        padding: 16px;      
+    }
+    .overview-list-item-label {
+        display: block;
+        font-size: 18px;
+        font-family: 'Noto Sans JP', sans-serif;
+        font-weight: 600;
+        color: rgb(92, 92, 92);
+    }
+    .overview-list-item-value {
+        color: #f2a900;
+        font-family: 'Noto Sans JP', sans-serif;
+        font-size: 15px;
+        font-weight: 400;
+        display: block;
+    }
+    .header {
+        color: #f2a900;
+        font-size: 20px;
+        font-weight: 700;
+        font-family: 'Noto Sans JP', sans-serif;
+    }
+    /* canvas properties */
+    canvas {
+        max-height: 70% !important;
+    }
 }
 
 
@@ -958,6 +1027,39 @@
     }
     .link:hover {
         text-decoration: #f2a900 underline;
+    }
+    #overview-list {
+        list-style: none;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+    .overview-list-item {
+        padding: 20px;      
+    }
+    .overview-list-item-label {
+        display: block;
+        font-size: 18px;
+        font-family: 'Noto Sans JP', sans-serif;
+        font-weight: 600;
+        color: rgb(92, 92, 92);
+    }
+    .overview-list-item-value {
+        color: #f2a900;
+        font-family: 'Noto Sans JP', sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+        display: block;
+    }
+    .header {
+        color: #f2a900;
+        font-size: 20px;
+        font-weight: 700;
+        font-family: 'Noto Sans JP', sans-serif;
+    }
+    /* canvas properties */
+    canvas {
+        height: 50% !important;
     }
 }
 

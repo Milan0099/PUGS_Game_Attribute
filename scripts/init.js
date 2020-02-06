@@ -16,7 +16,9 @@ let TELEMETRY_STATS = null;
 // Disable automatic style injection for CSP 
 Chart.platform.disableCSSInjection = true;
 
-
+const isMobile = () => {
+    return window.innerWidth < 540;
+};
 const showPreloader = () => {
     const l = document.querySelector('#preloader');
     const c = document.querySelector('#tele-container');
@@ -45,9 +47,7 @@ const changeMenu = (li) => {
     li.classList.add('active');
 };
 const getLeaderboard = (evt) => {
-    console.log(evt);
     let modeOrPlatform = evt.getAttribute('value');
-    console.log(`MOde:${modeOrPlatform}`);
     let alreadySelected = evt.classList.contains('selected');
     if(alreadySelected) {
         return ;
@@ -83,7 +83,6 @@ const getLeaderboard = (evt) => {
                 }
             }
             if(!plat) {
-                console.log(plts);
                 return ;
             }
             window.location.href = BASEURL.concat(['leaderboard' + `/${plat}` + `/${modeOrPlatform}`]);
@@ -95,8 +94,6 @@ const searchPlayer = (event) => {
     const searchField = $('#search-field');
     const name = $(searchField).val();
     const URL = BASEURL.concat(['player/' + `${name}`]);
-    console.log(`Searching for ${name}`);
-    console.log(`URL: ${URL}`);
     //window.location.href = URL;
     window.location.href = URL;
     return false;
@@ -114,16 +111,14 @@ const selectPlatformPlayerStats = (li) => {
 const getPlayerStats = () => {
     const formInput = document.querySelector('#player-info-name-input');
     let name = formInput.value; // problem; since ejs sets it to '', must submit and try 
-    console.log(`Submitted first: ${name}`);
     if(!name) {
         // submit form 
         const form = document.querySelector('#player-stats-name-form');
         form.onsubmit = () => { return false; }
         form.submit();
         const fi = form.querySelector('#player-info-name-input');
-        console.log(`PlayerName: ${fi.value}`);
         return ;
-    }
+    }   
     const ul = document.querySelector('#player-info-platform-sel');
     const lis = ul.querySelectorAll('li');
     let li;
@@ -135,22 +130,23 @@ const getPlayerStats = () => {
 };
 const parseModeData = (mode, arr) => {
     let a = [];
-    arr.forEach(e => a.push(e[mode]));
-    console.log(`MOde: ${mode}  ==> ${a.toString()}`);
+    arr.forEach(e => a.push((e[mode]/e.total) * 100));
     return a;
 }
 const showRegionalModeStats = () => {
     if(!TELEMETRY_STATS) {
         return console.log('[x] No telemetry data cached');
     }
-    const mdist = document.querySelector('#mdist-region').getContext('2d');
+    const mdist = document.querySelector('#mdist-region');
     const pc = TELEMETRY_STATS.filter(s => s.platform === 'pc');
     const sorted = pc.sort((a, b) => {
         if(a.name > b.name) return 1;
         else if(a.name < b.name) return -1;
         else return 0;
     });
-    
+    if(!isMobile()) {
+        mdist.height = 50;
+    }
     new Chart(mdist, {
         type: 'bar',
         data: {
@@ -183,7 +179,7 @@ const showRegionalModeStats = () => {
         },
         options: {
             tooltips: {
-            displayColors: true,
+                displayColors: true,
             },
             scales: {
             xAxes: [{
@@ -195,26 +191,39 @@ const showRegionalModeStats = () => {
             yAxes: [{
                 stacked: true,
                 ticks: {
-                beginAtZero: true,
+                    min: 0,
+                    max: 100.00
                 },
                 type: 'linear',
             }]
             },
-            responsive: true,
+            responsive: true
         }
     });
 };
 const parseMapData = (mode, mnames, stats) => {
-    const d = [];
-    for(const r of Object.keys(stats)) {
+    let d = [];
+    const regions = Object.keys(stats);
+    for(const r of regions) {
+        let total = 0;
+        Object.keys(stats[r])
+            .forEach(mapType => {
+                if(mapType.startsWith('Range')) return ;
+                Object.keys(stats[r][mapType])
+                    .forEach(gamemode => total += stats[r][mapType][gamemode])
+            });
+        let modeTot = 0;
         for(const m of mnames) {
             if(stats[r][m] && stats[r][m][mode] >= 0) {
-                d.push(stats[r][m][mode]);
+                // find the total
+                modeTot += stats[r][m][mode];
             }
         }
+        d.push((modeTot/total) * 100);
     }
     return d;
 };
+
 const showRegionMapCharts = (mapNames, mapStats) => {
     const ctx = document.querySelector('#mdist-maps');
     const ctx2 = document.querySelector('#reg-maps');
@@ -223,12 +232,16 @@ const showRegionMapCharts = (mapNames, mapStats) => {
         'Baltic_Main': "rgb(232, 211, 63)",
         'Desert_Main': "rgb(209, 123, 15)",
         'DihorOtok_Main': "rgb(183, 173, 207)",
-        'Erangel_Main': "rgb(241, 81, 82)",
-        'Range_Main': "rgb(53, 59, 60)",
         'Savage_Main': "rgb(64, 112, 118)",
-        'Summerland_Main': "rgb(116,179,206)"
+        'Summerland_Main': "rgb(116,179,206)",
+        'Other': 'rgb(101, 101, 102)'
     };
     const anames = snames.map(n => mapNames[n]);
+    if(!isMobile()) {
+        ctx.height = 50;
+        ctx2.height = 50;
+    }
+    
     new Chart(ctx, {
         type: 'bar',
         data: {
@@ -268,7 +281,7 @@ const showRegionMapCharts = (mapNames, mapStats) => {
         },
         options: {
             tooltips: {
-            displayColors: true,
+                displayColors: true,
             },
             scales: {
             xAxes: [{
@@ -280,35 +293,45 @@ const showRegionMapCharts = (mapNames, mapStats) => {
             yAxes: [{
                 stacked: true,
                 ticks: {
-                beginAtZero: true,
+                    min: 0,
+                    max: 100.00
                 },
                 type: 'linear',
             }]
             },
-            responsive: true,
+            responsive: true
         }
     });
     const rm = [];
-    const b = Object.keys(MAPPINGS).sort();
+    const b = Object.keys(mapStats).sort();
     for(const mp of snames) {
         let d = [];
         for(const reg of b) {
             let t = 0;
             if(!mapStats[reg][mp]) {
-                continue;
+                mapStats[reg][mp] = {
+                    solo: 0, duo: 0, squad: 0, solo_fpp: 0, duo_fpp: 0, squad_fpp: 0
+                };
             }
-            for(const mattype of Object.keys(mapStats[reg][mp])) {
+            const matches = Object.keys(mapStats[reg][mp]);
+            for(const mattype of matches) {
                 t += mapStats[reg][mp][mattype];
             }
-            d.push(t);
+            let regTot = 0;
+            Object.keys(mapStats[reg])
+                .forEach(m => {
+                    if(m.startsWith('Range')) return ;
+                    Object.keys(mapStats[reg][m])
+                        .forEach(md => regTot += mapStats[reg][m][md]);
+                });
+            d.push((t/regTot)*100);
         }
         rm.push({
             label: mapNames[mp],
             backgroundColor: colors[mp],
             data: d
-        })
+        });
     }
-    console.log(rm);
     new Chart(ctx2, {
         type: 'bar',
         data: {
@@ -317,7 +340,7 @@ const showRegionMapCharts = (mapNames, mapStats) => {
         },
         options: {
             tooltips: {
-            displayColors: true,
+                displayColors: true,
             },
             scales: {
             xAxes: [{
@@ -329,7 +352,8 @@ const showRegionMapCharts = (mapNames, mapStats) => {
             yAxes: [{
                 stacked: true,
                 ticks: {
-                beginAtZero: true,
+                    min: 0,
+                    max: 100.00
                 },
                 type: 'linear',
             }]
@@ -339,6 +363,20 @@ const showRegionMapCharts = (mapNames, mapStats) => {
     });
 
 };
+
+const updateOverview = (activePlayers, pollingSince, matchesCount) => {
+    const pcount = document.querySelector('#players-count');
+    const totMts = document.querySelector('#total-matches');
+    const mapCnt = document.querySelector('#maps-count');
+    const totDays = document.querySelector('#total-days');
+    const start = moment();
+    const end = moment(pollingSince);
+
+    mapCnt.innerHTML = 5;
+    pcount.innerHTML = activePlayers;
+    totDays.innerHTML = Math.ceil(moment.duration(start.diff(end)).asDays());
+    totMts.innerHTML = matchesCount;
+};
 const getTelemetries = () => {
     $.ajax({
         url: `${BASEURL}getTelemetries`,
@@ -346,7 +384,6 @@ const getTelemetries = () => {
         method: 'GET',
         error: (e, txt, xhr) => console.error(e),
         success: (data, txt, xhr) => {
-            console.log(data);
             TELEMETRY_STATS = data.stats;
             const pc = data.stats.filter(p => p.platform === 'pc');
             const cont = document.querySelector('#tele-container');
@@ -368,12 +405,13 @@ const getTelemetries = () => {
                     }
                 }
             });
+            let tot = tpp + fpp;
             new Chart(document.querySelector('#tpp-fpp'), {
                 type: 'pie',
                 data: {
                     datasets: [
                         { 
-                            data: [tpp, fpp],
+                            data: [((tpp/tot)*100).toFixed(2), ((fpp/tot) * 100).toFixed(2)],
                             fill: true,
                             backgroundColor: [
                                 'rgb(92, 128, 188)',
@@ -403,10 +441,10 @@ const getTelemetries = () => {
                 squadFpp += d.squad_fpp;
             });
             const md = [solo, duo, squad, soloFpp, duoFpp, squadFpp];
-            const tot = md.reduce((p, c) => {
+            const totmd = md.reduce((p, c) => {
                 return p + c;
             }, 0);
-            const amd = md.map(v => parseFloat((v/tot * 100).toFixed(2)));
+            const amd = md.map(v => parseFloat((v/totmd * 100).toFixed(2)));
             
             new Chart(document.querySelector('#match-distribution'), {
                 type: 'pie',
@@ -429,7 +467,8 @@ const getTelemetries = () => {
                 }
             });
 
-            // show regional stat
+            // show regional sta
+            updateOverview(data.activePlayers, data.pollingSince, data.matchesCount);
             showRegionalModeStats();
             showRegionMapCharts(data.mapNames, data.mapStats);
             document.querySelector('#preloader').classList.remove('active');

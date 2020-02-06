@@ -453,6 +453,21 @@ server.get('/getTelemetries', async (req, res, nxt) => {
                 }
             });
         });
+        const matchCount = await new Promise((res, rej) => {
+            const q = `
+                SELECT COUNT(match_id) AS 'matCount' FROM matches
+            `;
+            DBPool.query(q, (err, c) => {
+                if(err) {
+                    console.log('[x] Could not get count');
+                    console.error(err);
+                    rej(err);
+                }
+                else {
+                    res(c[0].matCount);
+                }
+            });
+        });
         const resActivePlayersSteam = await steamApi.getPlayersCount();
         const activePlayersSteam = resActivePlayersSteam.data.response.player_count;
         console.log(activePlayersSteam);
@@ -461,7 +476,26 @@ server.get('/getTelemetries', async (req, res, nxt) => {
             stats: telem,
             activePlayersSteam: activePlayersSteam,
             mapNames: mapNames,
-            mapStats: mapStats
+            activePlayers: (() => {
+                let counts = {
+                    solo: 0, duo: 0, squad: 0, solo_fpp: 0, duo_fpp: 0, squad_fpp: 0
+                };
+                for(const row of telem) {
+                    Object.keys(counts)
+                        .forEach(mode => counts[mode] = counts[mode] + row[mode]);
+                }
+                let t = 0;
+                const modes = Object.keys(counts);
+                for(const m of modes) {
+                    if(m.startsWith('solo')) t += counts[m];
+                    else if(m.startsWith('duo')) t += counts[m] * 2;
+                    else if(m.startsWith('squad')) t += counts[m] * 4;
+                }
+                return t;
+            })(),
+            matchesCount: matchCount,
+            mapStats: JSON.parse(fs.readFileSync('./stats.json', { encoding: 'utf8'})),
+            pollingSince: '2020-02-01'
         });
     } catch(err) {
         console.error(err);  

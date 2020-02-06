@@ -8,7 +8,10 @@ const mysql = require('mysql');
 const axios = require('axios');
 const path = require('path');
 const fs = require('fs');
+const low = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync');
 const fsp = fs.promises;
+
 
 const configs = require('./configs.json');
 const { sleep } = require('./utils');
@@ -19,6 +22,9 @@ const conn = mysql.createConnection({
     password: configs.DBPASS,
     database: configs.DBNAME
 });
+const adapter = new FileSync('./stats.json');
+const jsondb = low(adapter);
+
 const SAVEPATH = path.resolve('./telemetries');
 const baseURL = "https://api.pubg.com/";
 const headers = {
@@ -49,8 +55,28 @@ const platformRegions = [
     { region: 'xbox-oc', name: 'Oceania'},
     { region: 'xbox-sa', name: 'South and Central America'}
 ];
+const modes = [
+    'solo', 'duo', 'squad', 'solo-fpp', 'duo-fpp', 'squad-fpp'
+];
 
-(async () => {
+const updater = async () => {
+    const cached = await new Promise((rs, rj) => {
+        conn.query(`SELECT match_id from matches`, (e, mts) => {
+            if(e) {
+                console.log('[x] Could not fetch cached matches');
+                console.error(e);
+                rs();
+            }
+            else {
+                mts = mts.map(mo => mo.match_id);
+                console.log('[-] Cached: ');
+                console.log(mts);
+                rs(mts);
+            }
+        })
+    });
+    const stats = {};
+    const ids = [];
     for(const plr of platformRegions) {
         let shard;
         if(plr.region.startsWith('pc')) {
@@ -66,6 +92,7 @@ const platformRegions = [
         const counts = {
             solo: 0, 'solo-fpp': 0, duo: 0, 'duo-fpp': 0, squad: 0, 'squad-fpp': 0, total: 0
         };
+        let reg = plr.name;
         try {
             console.log(`[-] Getting samples for ${plr.region}`);
             const resSamples = await axiosInstance.get(`shards/${plr.region}/samples`);
@@ -74,15 +101,49 @@ const platformRegions = [
             if(samples && samples.length) {
                 console.log(`[-] Found ${samples.length} sample matches`);
                 for(const samp of samples) {
-                    if(count > 100) break;
+                    if(count >= configs.SAMPLING_RATE) break;
                     const mid = samp.id;
+                    if(cached.indexOf(mid) !== -1) {
+                        console.log(`Match: ${mid} is already cached`);
+                        continue;
+                    }
                     try {
                         const resMatch = await axiosInstance.get(`shards/${shard}/matches/${mid}`);
                         const match = resMatch.data;
                         const matAttrs = match.data.attributes;
-                        console.log(`[-] Got match with ID: ${mid}  Mode: ${matAttrs.gameMode}`);
+                        console.log(`[-] Got match with ID: ${mid}  Mode: ${matAttrs.gameMode}  Map: ${matAttrs.mapName}`);
+                        ids.push(mid);
                         counts[matAttrs.gameMode]++;
                         counts.total++;
+                        if(stats[reg]) {
+                            if(stats[reg][matAttrs.mapName]) {
+                                if(stats[reg][matAttrs.mapName][matAttrs.gameMode]) {
+                                    stats[reg][matAttrs.mapName][matAttrs.gameMode]++;
+                                }
+                                else {
+                                    if(modes.indexOf(matAttrs.gameMode) !== -1) {
+                                        stats[reg][matAttrs.mapName][matAttrs.gameMode] = 1;
+                                    }
+                                }
+                            }
+                            else {
+                                stats[reg][matAttrs.mapName] = {
+                                    solo: 0, duo: 0, squad: 0, 'solo-fpp': 0, 'duo-fpp': 0, 'squad-fpp': 0
+                                };
+                                if(modes.indexOf(matAttrs.gameMode) !== -1) {
+                                    stats[reg][matAttrs.mapName][matAttrs.gameMode]++;
+                                }
+                            }
+                        }
+                        else {
+                            stats[reg] = {};
+                            stats[reg][matAttrs.mapName] = {
+                                solo: 0, duo: 0, squad: 0, 'solo-fpp': 0, 'duo-fpp': 0, 'squad-fpp': 0
+                            };
+                            if(modes.indexOf(matAttrs.gameMode) !== -1) {
+                                stats[reg][matAttrs.mapName][matAttrs.gameMode]++;
+                            }
+                        }
                         count++;
                     } catch(sampErr) {
                         let status = 'Unknown';
@@ -90,14 +151,15 @@ const platformRegions = [
                             status = sampErr.response.status;
                         }
                         console.log(`[x] Error while looking up sample match: ${status}`);
+                        console.error(sampErr);
                     }
                     await sleep(6900);
                 }
                 // update DB
                 console.log(`Total count for region ${plr.region}: ${JSON.stringify(counts)}`);
-                const q = `UPDATE regional_modes_stats SET solo=${counts.solo}, 
-                    solo_fpp=${counts['solo-fpp']}, duo=${counts.duo}, duo_fpp=${counts['duo-fpp']},
-                    squad=${counts.squad}, squad_fpp=${counts['squad-fpp']}, total=${counts.total} 
+                const q = `UPDATE regional_modes_stats SET solo= solo + ${counts.solo}, 
+                    solo_fpp= solo_fpp + ${counts['solo-fpp']}, duo= duo + ${counts.duo}, duo_fpp= duo_fpp + ${counts['duo-fpp']},
+                    squad=squad + ${counts.squad}, squad_fpp=squad_fpp + ${counts['squad-fpp']}, total= total + ${counts.total} 
                     WHERE platform='${plat}' AND name='${plr.name}';
                 `;
                 await new Promise((resolve, reject) => {
@@ -111,13 +173,55 @@ const platformRegions = [
                         }
                     });
                 });
+                Object.keys(stats)
+                    .forEach(r => {
+                        Object.keys(stats[r])
+                            .forEach(map => {
+                                Object.keys(stats[r][map])
+                                    .forEach(mode => {
+                                        jsondb.update(`${r}.${map}.${mode}`, c => {
+                                            c = c + stats[r][map][mode];
+                                            return c;
+                                        }).write();
+                                    });
+                            });
+                    });
+                //jsondb.write();
             }
             else {
                 console.log(`[-] No samples for ${plr.region}`);
-                await sleep(6500);
+                await sleep(6250);
             }
         } catch(sampleLookupError) {
             console.error(sampleLookupError);
         }
     }
-})();
+    // write sample ids
+    let mids = ids.map(i => `(NULL, '${i}')`).join(', ');
+    const mq = `INSERT INTO matches VALUES ${mids}`;
+    await new Promise((res, rej) => {
+        conn.query(mq, (err, inserted) => {
+            if(err) {
+                console.log('[x] Could not update matches table');
+                console.error(err);
+                res();
+            }
+            else {
+                console.log('[*] Match ids updated');
+            }
+            res();
+        });
+    })
+    .catch(e => console.error(e));
+};
+
+if(!module.parent) {
+    let up = true;
+    setInterval(async () => {
+        if(up) {
+            up = false;
+            await updater();
+            up = true;
+        }
+    }, 1000 * 60 * 10);
+}

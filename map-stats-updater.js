@@ -77,35 +77,7 @@ const modes = [
                         const match = resMatch.data;
                         const matAttrs = match.data.attributes;
                         console.log(`[-] Got match with ID: ${mid}  Mode: ${matAttrs.gameMode}  Map: ${matAttrs.mapName}`);
-                        if(stats[reg]) {
-                            if(stats[reg][matAttrs.mapName]) {
-                                if(stats[reg][matAttrs.mapName][matAttrs.gameMode]) {
-                                    stats[reg][matAttrs.mapName][matAttrs.gameMode]++;
-                                }
-                                else {
-                                    if(modes.indexOf(matAttrs.gameMode) !== -1) {
-                                        stats[reg][matAttrs.mapName][matAttrs.gameMode] = 1;
-                                    }
-                                }
-                            }
-                            else {
-                                stats[reg][matAttrs.mapName] = {
-                                    solo: 0, duo: 0, squad: 0, 'solo-fpp': 0, 'duo-fpp': 0, 'squad-fpp': 0
-                                };
-                                if(modes.indexOf(matAttrs.gameMode) !== -1) {
-                                    stats[reg][matAttrs.mapName][matAttrs.gameMode]++;
-                                }
-                            }
-                        }
-                        else {
-                            stats[reg] = {};
-                            stats[reg][matAttrs.mapName] = {
-                                solo: 0, duo: 0, squad: 0, 'solo-fpp': 0, 'duo-fpp': 0, 'squad-fpp': 0
-                            };
-                            if(modes.indexOf(matAttrs.gameMode) !== -1) {
-                                stats[reg][matAttrs.mapName][matAttrs.gameMode]++;
-                            }
-                        }
+                        
                         count++;
                     } catch(sampErr) {
                         let status = 'Unknown';
