@@ -411,7 +411,7 @@ const getTelemetries = () => {
                 data: {
                     datasets: [
                         { 
-                            data: [((tpp/tot)*100).toFixed(2), ((fpp/tot) * 100).toFixed(2)],
+                            data: [((tpp/tot)*100), ((fpp/tot) * 100)],
                             fill: true,
                             backgroundColor: [
                                 'rgb(92, 128, 188)',
