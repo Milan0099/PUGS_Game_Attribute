@@ -242,7 +242,7 @@ const showRegionMapCharts = (mapNames, mapStats) => {
         ctx2.height = 50;
     }
     anames.forEach(n => {
-        if(n.endsWith('(Remastered)')) {
+        if(n.search(/(Remastered)/)) {
             n = 'Erangel';
         }
     });
