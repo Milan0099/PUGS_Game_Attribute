@@ -241,6 +241,11 @@ const showRegionMapCharts = (mapNames, mapStats) => {
         ctx.height = 50;
         ctx2.height = 50;
     }
+    anames.forEach(n => {
+        if(n.endsWith('(Remastered)')) {
+            n = 'Erangel';
+        }
+    });
     
     new Chart(ctx, {
         type: 'bar',
@@ -396,12 +401,15 @@ const getTelemetries = () => {
             let tpp = 0; 
             let fpp = 0;
             pc.forEach(d => {
-                for(const m of Object.keys(d)) {
-                    if(m.endsWith('fpp')) {
-                        fpp++;
-                    }
-                    else {
-                        tpp++;
+                const props = Object.keys(d)
+                for(const m of props) {
+                    switch(m) {
+                        case 'solo': case 'duo': case 'squad':
+                            tpp += d[m];
+                            break;
+                        case 'solo_fpp': case 'duo_fpp': case 'squad_fpp':
+                            fpp += d[m];
+                            break;
                     }
                 }
             });
