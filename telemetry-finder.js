@@ -153,7 +153,7 @@ const updater = async () => {
                         console.log(`[x] Error while looking up sample match: ${status}`);
                         console.error(sampErr);
                     }
-                    await sleep(6900);
+                    await sleep(configs.TELEMETRY_API_REQ_DELAY);
                 }
                 // update DB
                 console.log(`Total count for region ${plr.region}: ${JSON.stringify(counts)}`);
@@ -190,7 +190,7 @@ const updater = async () => {
             }
             else {
                 console.log(`[-] No samples for ${plr.region}`);
-                await sleep(6250);
+                await sleep(configs.TELEMETRY_API_REQ_DELAY);
             }
         } catch(sampleLookupError) {
             console.error(sampleLookupError);
@@ -199,20 +199,22 @@ const updater = async () => {
     // write sample ids
     let mids = ids.map(i => `(NULL, '${i}')`).join(', ');
     const mq = `INSERT INTO matches VALUES ${mids}`;
-    await new Promise((res, rej) => {
-        conn.query(mq, (err, inserted) => {
-            if(err) {
-                console.log('[x] Could not update matches table');
-                console.error(err);
+    if(mids && mids.length && mids.length > 0) {
+        await new Promise((res, rej) => {
+            conn.query(mq, (err, inserted) => {
+                if(err) {
+                    console.log('[x] Could not update matches table');
+                    console.error(err);
+                    res();
+                }
+                else {
+                    console.log('[*] Match ids updated');
+                }
                 res();
-            }
-            else {
-                console.log('[*] Match ids updated');
-            }
-            res();
-        });
-    })
-    .catch(e => console.error(e));
+            });
+        })
+        .catch(e => console.error(e));
+    }
 };
 
 if(!module.parent) {
@@ -223,5 +225,5 @@ if(!module.parent) {
             await updater();
             up = true;
         }
-    }, 1000 * 5);
+    }, configs.TELEMETRY_UPDATE_INTERVAL);
 }

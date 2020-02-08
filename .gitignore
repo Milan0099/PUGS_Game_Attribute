@@ -3,3 +3,4 @@ screenshots/
 .well-known/
 certs/
 telemetries/
+stats.json

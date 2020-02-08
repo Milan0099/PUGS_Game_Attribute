@@ -131,7 +131,7 @@ const getPlayerStats = () => {
 const parseModeData = (mode, arr) => {
     let a = [];
     arr.forEach(e => a.push((e[mode]/e.total) * 100));
-    return a;
+    return a.map(p => parseFloat(p).toFixed(2));
 }
 const showRegionalModeStats = () => {
     if(!TELEMETRY_STATS) {
@@ -150,7 +150,10 @@ const showRegionalModeStats = () => {
     new Chart(mdist, {
         type: 'bar',
         data: {
-            labels: Object.keys(MAPPINGS).sort(),
+            labels: Object.values(MAPPINGS).sort().map(l => {
+                if(l === 'krjp') return 'Kor';
+                else return l[0].toUpperCase() + l.substr(1);
+            }),
             datasets: [{
                 label: 'Solo',
                 backgroundColor: "rgb(232, 211, 63)",
@@ -221,7 +224,7 @@ const parseMapData = (mode, mnames, stats) => {
         }
         d.push((modeTot/total) * 100);
     }
-    return d;
+    return d.map(p => parseFloat(p).toFixed(2));
 };
 
 const showRegionMapCharts = (mapNames, mapStats) => {
@@ -332,15 +335,18 @@ const showRegionMapCharts = (mapNames, mapStats) => {
             d.push((t/regTot)*100);
         }
         rm.push({
-            label: mapNames[mp],
+            label: (mapNames[mp].search(/\(Remastered\)/) !== -1) ? 'Erangel' : mapNames[mp],
             backgroundColor: colors[mp],
-            data: d
+            data: d.map(p => parseFloat(p).toFixed(2))
         });
     }
     new Chart(ctx2, {
         type: 'bar',
         data: {
-            labels: b,
+            labels: b.map(r => {
+                if(r === 'Korea') return 'Kor';
+                else return MAPPINGS[r][0].toUpperCase() + MAPPINGS[r].substr(1)
+            }),
             datasets: rm
         },
         options: {
@@ -419,7 +425,7 @@ const getTelemetries = () => {
                 data: {
                     datasets: [
                         { 
-                            data: [((tpp/tot)*100), ((fpp/tot) * 100)],
+                            data: [((tpp/tot)*100).toFixed(2), ((fpp/tot) * 100).toFixed(2)],
                             fill: true,
                             backgroundColor: [
                                 'rgb(92, 128, 188)',
