@@ -241,10 +241,9 @@ const showRegionMapCharts = (mapNames, mapStats) => {
         ctx.height = 50;
         ctx2.height = 50;
     }
-    anames.forEach(n => {
-        console.log(`Searching: ${n} => ${n.search(/\(Remastered\)/)}`);
-        if(n.search(/\(Remastered\)/)) {
-            n = 'Erangel';
+    anames.forEach((n, i, a) => {
+        if(n.search(/\(Remastered\)/) !== -1) {
+            a[i] = 'Erangel';
         }
     });
     
