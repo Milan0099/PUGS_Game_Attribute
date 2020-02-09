@@ -1,4 +1,4 @@
-const BASEURL = 'https://pubgstats.info/';
+const BASEURL = 'http://pubgstats.info/';
 const MAPPINGS = {
     'Asia': 'as',
     'Europe': 'eu',

@@ -326,30 +326,33 @@
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
-        flex-wrap: wrap;
+        background: #f2a900;
     }
     .overview-list-item {
-        padding: 12px;      
+        padding: 20px;      
     }
     .overview-list-item-label {
         display: block;
         font-size: 15px;
         font-family: 'Noto Sans JP', sans-serif;
-        font-weight: 600;
-        color: rgb(92, 92, 92);
+        font-weight: 400;
+        color: #fff;
     }
     .overview-list-item-value {
-        color: #f2a900;
+        color: #fff;
         font-family: 'Noto Sans JP', sans-serif;
-        font-size: 12px;
-        font-weight: 400;
+        font-size: 18px;
+        font-weight: 600;
         display: block;
     }
     .header {
         color: #f2a900;
-        font-size: 18px;
+        font-size: 20px;
         font-weight: 700;
         font-family: 'Noto Sans JP', sans-serif;
+    }
+    .chart-card {
+        text-align: center;
     }
     /* canvas properties */
     canvas {
@@ -686,23 +689,23 @@
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
-        flex-wrap: wrap;
+        background: #f2a900;
     }
     .overview-list-item {
-        padding: 16px;      
+        padding: 20px;      
     }
     .overview-list-item-label {
         display: block;
-        font-size: 18px;
+        font-size: 15px;
         font-family: 'Noto Sans JP', sans-serif;
-        font-weight: 600;
-        color: rgb(92, 92, 92);
+        font-weight: 400;
+        color: #fff;
     }
     .overview-list-item-value {
-        color: #f2a900;
+        color: #fff;
         font-family: 'Noto Sans JP', sans-serif;
-        font-size: 15px;
-        font-weight: 400;
+        font-size: 18px;
+        font-weight: 600;
         display: block;
     }
     .header {
@@ -710,6 +713,9 @@
         font-size: 20px;
         font-weight: 700;
         font-family: 'Noto Sans JP', sans-serif;
+    }
+    .chart-card {
+        text-align: center;
     }
     /* canvas properties */
     canvas {
@@ -1033,22 +1039,23 @@
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
+        background: #f2a900;
     }
     .overview-list-item {
         padding: 20px;      
     }
     .overview-list-item-label {
         display: block;
-        font-size: 18px;
+        font-size: 15px;
         font-family: 'Noto Sans JP', sans-serif;
-        font-weight: 600;
-        color: rgb(92, 92, 92);
+        font-weight: 400;
+        color: #fff;
     }
     .overview-list-item-value {
-        color: #f2a900;
+        color: #fff;
         font-family: 'Noto Sans JP', sans-serif;
         font-size: 18px;
-        font-weight: 400;
+        font-weight: 600;
         display: block;
     }
     .header {
@@ -1056,6 +1063,9 @@
         font-size: 20px;
         font-weight: 700;
         font-family: 'Noto Sans JP', sans-serif;
+    }
+    .chart-card {
+        text-align: center;
     }
     /* canvas properties */
     canvas {
