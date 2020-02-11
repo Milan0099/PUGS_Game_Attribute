@@ -1,39 +1,39 @@
 {
   "Asia": {
     "Summerland_Main": {
-      "solo": 3,
-      "duo": 5,
-      "squad": 23,
-      "solo-fpp": 2,
-      "duo-fpp": 19,
-      "squad-fpp": 6
+      "solo": 1099,
+      "duo": 2550,
+      "squad": 7464,
+      "solo-fpp": 434,
+      "duo-fpp": 1137,
+      "squad-fpp": 2192
     },
     "Baltic_Main": {
-      "solo": 0,
-      "duo": 0,
-      "squad": 5,
-      "solo-fpp": 0,
-      "duo-fpp": 0,
-      "squad-fpp": 1
+      "solo": 345,
+      "duo": 600,
+      "squad": 2376,
+      "solo-fpp": 50,
+      "duo-fpp": 230,
+      "squad-fpp": 571
     },
     "Savage_Main": {
-      "solo": 1,
-      "duo": 1,
-      "squad": 5,
-      "solo-fpp": 0,
-      "duo-fpp": 2,
-      "squad-fpp": 0
+      "solo": 474,
+      "duo": 691,
+      "squad": 3484,
+      "solo-fpp": 30,
+      "duo-fpp": 252,
+      "squad-fpp": 1008
     },
     "Desert_Main": {
-      "solo": 0,
-      "duo": 0,
-      "squad": 5,
-      "solo-fpp": 1,
-      "duo-fpp": 0,
-      "squad-fpp": 0
+      "solo": 80,
+      "duo": 260,
+      "squad": 2015,
+      "solo-fpp": 41,
+      "duo-fpp": 40,
+      "squad-fpp": 158
     },
     "Range_Main": {
-      "solo": 3,
+      "solo": 2031,
       "duo": 0,
       "squad": 0,
       "solo-fpp": 0,
@@ -43,39 +43,39 @@
   },
   "Europe": {
     "Summerland_Main": {
-      "solo": 2,
-      "duo": 6,
-      "squad": 21,
-      "solo-fpp": 2,
-      "duo-fpp": 17,
-      "squad-fpp": 6
+      "solo": 987,
+      "duo": 2294,
+      "squad": 6712,
+      "solo-fpp": 390,
+      "duo-fpp": 1023,
+      "squad-fpp": 1971
     },
     "Baltic_Main": {
-      "solo": 0,
-      "duo": 0,
-      "squad": 4,
-      "solo-fpp": 0,
-      "duo-fpp": 1,
-      "squad-fpp": 2
+      "solo": 310,
+      "duo": 540,
+      "squad": 2136,
+      "solo-fpp": 45,
+      "duo-fpp": 208,
+      "squad-fpp": 515
     },
     "Savage_Main": {
-      "solo": 1,
-      "duo": 1,
-      "squad": 5,
-      "solo-fpp": 0,
-      "duo-fpp": 2,
-      "squad-fpp": 0
+      "solo": 426,
+      "duo": 621,
+      "squad": 3133,
+      "solo-fpp": 27,
+      "duo-fpp": 227,
+      "squad-fpp": 907
     },
     "Desert_Main": {
-      "solo": 0,
-      "duo": 0,
-      "squad": 3,
-      "solo-fpp": 1,
-      "duo-fpp": 0,
-      "squad-fpp": 0
+      "solo": 72,
+      "duo": 234,
+      "squad": 1810,
+      "solo-fpp": 37,
+      "duo-fpp": 36,
+      "squad-fpp": 142
     },
     "Range_Main": {
-      "solo": 3,
+      "solo": 1826,
       "duo": 0,
       "squad": 0,
       "solo-fpp": 0,
@@ -85,39 +85,39 @@
   },
   "Japan": {
     "Summerland_Main": {
-      "solo": 2,
-      "duo": 6,
-      "squad": 20,
-      "solo-fpp": 2,
-      "duo-fpp": 15,
-      "squad-fpp": 6
+      "solo": 876,
+      "duo": 2037,
+      "squad": 5961,
+      "solo-fpp": 346,
+      "duo-fpp": 909,
+      "squad-fpp": 1750
     },
     "Baltic_Main": {
-      "solo": 0,
-      "duo": 0,
-      "squad": 4,
-      "solo-fpp": 0,
-      "duo-fpp": 1,
-      "squad-fpp": 2
+      "solo": 275,
+      "duo": 480,
+      "squad": 1897,
+      "solo-fpp": 40,
+      "duo-fpp": 185,
+      "squad-fpp": 458
     },
     "Savage_Main": {
-      "solo": 1,
-      "duo": 1,
-      "squad": 4,
-      "solo-fpp": 0,
-      "duo-fpp": 1,
-      "squad-fpp": 0
+      "solo": 378,
+      "duo": 551,
+      "squad": 2781,
+      "solo-fpp": 24,
+      "duo-fpp": 201,
+      "squad-fpp": 806
     },
     "Desert_Main": {
-      "solo": 0,
-      "duo": 0,
-      "squad": 4,
-      "solo-fpp": 1,
-      "duo-fpp": 0,
-      "squad-fpp": 0
+      "solo": 64,
+      "duo": 208,
+      "squad": 1608,
+      "solo-fpp": 33,
+      "duo-fpp": 32,
+      "squad-fpp": 126
     },
     "Range_Main": {
-      "solo": 3,
+      "solo": 1621,
       "duo": 0,
       "squad": 0,
       "solo-fpp": 0,
@@ -127,33 +127,41 @@
   },
   "Kakao": {
     "Summerland_Main": {
-      "solo": 4,
-      "duo": 6,
-      "squad": 15,
+      "solo": 864,
+      "duo": 2560,
+      "squad": 4112,
       "solo-fpp": 0,
       "duo-fpp": 0,
       "squad-fpp": 0
     },
     "Baltic_Main": {
-      "solo": 0,
-      "duo": 0,
-      "squad": 1,
+      "solo": 84,
+      "duo": 256,
+      "squad": 468,
       "solo-fpp": 0,
       "duo-fpp": 0,
       "squad-fpp": 0
     },
     "Savage_Main": {
-      "solo": 14,
-      "duo": 5,
-      "squad": 20,
+      "solo": 769,
+      "duo": 2131,
+      "squad": 4731,
       "solo-fpp": 0,
       "duo-fpp": 0,
       "squad-fpp": 0
     },
     "Range_Main": {
-      "solo": 5,
+      "solo": 1477,
       "duo": 0,
       "squad": 0,
+      "solo-fpp": 0,
+      "duo-fpp": 0,
+      "squad-fpp": 0
+    },
+    "Desert_Main": {
+      "solo": 0,
+      "duo": 49,
+      "squad": 193,
       "solo-fpp": 0,
       "duo-fpp": 0,
       "squad-fpp": 0
@@ -161,39 +169,39 @@
   },
   "Korea": {
     "Summerland_Main": {
-      "solo": 3,
-      "duo": 5,
-      "squad": 20,
-      "solo-fpp": 1,
-      "duo-fpp": 11,
-      "squad-fpp": 5
+      "solo": 647,
+      "duo": 1522,
+      "squad": 4445,
+      "solo-fpp": 257,
+      "duo-fpp": 677,
+      "squad-fpp": 1299
     },
     "Baltic_Main": {
-      "solo": 0,
-      "duo": 0,
-      "squad": 4,
-      "solo-fpp": 0,
-      "duo-fpp": 1,
-      "squad-fpp": 2
+      "solo": 201,
+      "duo": 360,
+      "squad": 1403,
+      "solo-fpp": 30,
+      "duo-fpp": 139,
+      "squad-fpp": 344
     },
     "Savage_Main": {
-      "solo": 1,
-      "duo": 1,
-      "squad": 5,
-      "solo-fpp": 0,
-      "duo-fpp": 2,
-      "squad-fpp": 0
+      "solo": 278,
+      "duo": 403,
+      "squad": 2072,
+      "solo-fpp": 18,
+      "duo-fpp": 152,
+      "squad-fpp": 600
     },
     "Desert_Main": {
-      "solo": 0,
-      "duo": 0,
-      "squad": 2,
-      "solo-fpp": 1,
-      "duo-fpp": 0,
-      "squad-fpp": 1
+      "solo": 48,
+      "duo": 156,
+      "squad": 1192,
+      "solo-fpp": 25,
+      "duo-fpp": 24,
+      "squad-fpp": 91
     },
     "Range_Main": {
-      "solo": 2,
+      "solo": 1202,
       "duo": 0,
       "squad": 0,
       "solo-fpp": 0,
@@ -203,39 +211,39 @@
   },
   "North America": {
     "Summerland_Main": {
-      "solo": 2,
-      "duo": 6,
-      "squad": 17,
-      "solo-fpp": 2,
-      "duo-fpp": 9,
-      "squad-fpp": 6
+      "solo": 537,
+      "duo": 1291,
+      "squad": 3706,
+      "solo-fpp": 219,
+      "duo-fpp": 569,
+      "squad-fpp": 1091
     },
     "Baltic_Main": {
-      "solo": 0,
-      "duo": 0,
-      "squad": 3,
-      "solo-fpp": 0,
-      "duo-fpp": 1,
-      "squad-fpp": 2
+      "solo": 167,
+      "duo": 300,
+      "squad": 1182,
+      "solo-fpp": 25,
+      "duo-fpp": 116,
+      "squad-fpp": 287
     },
     "Savage_Main": {
-      "solo": 1,
-      "duo": 1,
-      "squad": 4,
-      "solo-fpp": 0,
-      "duo-fpp": 2,
-      "squad-fpp": 0
+      "solo": 231,
+      "duo": 335,
+      "squad": 1727,
+      "solo-fpp": 15,
+      "duo-fpp": 127,
+      "squad-fpp": 505
     },
     "Desert_Main": {
-      "solo": 0,
-      "duo": 0,
-      "squad": 4,
-      "solo-fpp": 1,
-      "duo-fpp": 0,
-      "squad-fpp": 0
+      "solo": 40,
+      "duo": 130,
+      "squad": 1013,
+      "solo-fpp": 21,
+      "duo-fpp": 20,
+      "squad-fpp": 85
     },
     "Range_Main": {
-      "solo": 3,
+      "solo": 1015,
       "duo": 0,
       "squad": 0,
       "solo-fpp": 0,
@@ -245,39 +253,39 @@
   },
   "Oceania": {
     "Summerland_Main": {
-      "solo": 2,
-      "duo": 6,
-      "squad": 16,
-      "solo-fpp": 2,
-      "duo-fpp": 7,
-      "squad-fpp": 6
+      "solo": 438,
+      "duo": 1034,
+      "squad": 2979,
+      "solo-fpp": 175,
+      "duo-fpp": 459,
+      "squad-fpp": 879
     },
     "Baltic_Main": {
-      "solo": 0,
-      "duo": 0,
-      "squad": 3,
-      "solo-fpp": 0,
-      "duo-fpp": 1,
-      "squad-fpp": 2
+      "solo": 137,
+      "duo": 240,
+      "squad": 961,
+      "solo-fpp": 20,
+      "duo-fpp": 93,
+      "squad-fpp": 230
     },
     "Savage_Main": {
-      "solo": 1,
-      "duo": 1,
-      "squad": 4,
-      "solo-fpp": 0,
-      "duo-fpp": 2,
-      "squad-fpp": 0
+      "solo": 189,
+      "duo": 275,
+      "squad": 1388,
+      "solo-fpp": 12,
+      "duo-fpp": 102,
+      "squad-fpp": 408
     },
     "Desert_Main": {
-      "solo": 0,
-      "duo": 0,
-      "squad": 4,
-      "solo-fpp": 1,
-      "duo-fpp": 0,
-      "squad-fpp": 0
+      "solo": 32,
+      "duo": 104,
+      "squad": 818,
+      "solo-fpp": 17,
+      "duo-fpp": 16,
+      "squad-fpp": 72
     },
     "Range_Main": {
-      "solo": 3,
+      "solo": 820,
       "duo": 0,
       "squad": 0,
       "solo-fpp": 0,
@@ -287,39 +295,39 @@
   },
   "Russia": {
     "Summerland_Main": {
-      "solo": 3,
-      "duo": 6,
-      "squad": 15,
-      "solo-fpp": 2,
-      "duo-fpp": 5,
-      "squad-fpp": 6
+      "solo": 333,
+      "duo": 777,
+      "squad": 2229,
+      "solo-fpp": 128,
+      "duo-fpp": 344,
+      "squad-fpp": 654
     },
     "Baltic_Main": {
-      "solo": 0,
-      "duo": 0,
-      "squad": 4,
-      "solo-fpp": 0,
-      "duo-fpp": 1,
-      "squad-fpp": 1
+      "solo": 102,
+      "duo": 183,
+      "squad": 709,
+      "solo-fpp": 15,
+      "duo-fpp": 73,
+      "squad-fpp": 172
     },
     "Savage_Main": {
-      "solo": 1,
-      "duo": 1,
-      "squad": 5,
-      "solo-fpp": 0,
-      "duo-fpp": 2,
-      "squad-fpp": 0
+      "solo": 142,
+      "duo": 211,
+      "squad": 1037,
+      "solo-fpp": 9,
+      "duo-fpp": 74,
+      "squad-fpp": 309
     },
     "Desert_Main": {
-      "solo": 0,
-      "duo": 0,
-      "squad": 4,
-      "solo-fpp": 0,
-      "duo-fpp": 0,
-      "squad-fpp": 0
+      "solo": 24,
+      "duo": 78,
+      "squad": 619,
+      "solo-fpp": 15,
+      "duo-fpp": 12,
+      "squad-fpp": 54
     },
     "Range_Main": {
-      "solo": 2,
+      "solo": 614,
       "duo": 0,
       "squad": 0,
       "solo-fpp": 0,
@@ -329,39 +337,39 @@
   },
   "South and Central America": {
     "Summerland_Main": {
-      "solo": 2,
-      "duo": 6,
-      "squad": 14,
-      "solo-fpp": 2,
-      "duo-fpp": 3,
-      "squad-fpp": 6
+      "solo": 222,
+      "duo": 520,
+      "squad": 1490,
+      "solo-fpp": 86,
+      "duo-fpp": 229,
+      "squad-fpp": 438
     },
     "Baltic_Main": {
-      "solo": 0,
-      "duo": 0,
-      "squad": 3,
-      "solo-fpp": 0,
-      "duo-fpp": 1,
-      "squad-fpp": 2
+      "solo": 68,
+      "duo": 122,
+      "squad": 473,
+      "solo-fpp": 10,
+      "duo-fpp": 49,
+      "squad-fpp": 116
     },
     "Savage_Main": {
-      "solo": 1,
-      "duo": 1,
-      "squad": 4,
-      "solo-fpp": 0,
-      "duo-fpp": 2,
-      "squad-fpp": 0
+      "solo": 95,
+      "duo": 141,
+      "squad": 692,
+      "solo-fpp": 6,
+      "duo-fpp": 50,
+      "squad-fpp": 206
     },
     "Desert_Main": {
-      "solo": 0,
-      "duo": 0,
-      "squad": 4,
-      "solo-fpp": 1,
-      "duo-fpp": 0,
-      "squad-fpp": 0
+      "solo": 16,
+      "duo": 52,
+      "squad": 414,
+      "solo-fpp": 11,
+      "duo-fpp": 8,
+      "squad-fpp": 36
     },
     "Range_Main": {
-      "solo": 3,
+      "solo": 411,
       "duo": 0,
       "squad": 0,
       "solo-fpp": 0,
@@ -371,39 +379,39 @@
   },
   "South East Asia": {
     "Summerland_Main": {
-      "solo": 3,
-      "duo": 6,
-      "squad": 12,
-      "solo-fpp": 2,
-      "duo-fpp": 2,
-      "squad-fpp": 6
+      "solo": 113,
+      "duo": 263,
+      "squad": 750,
+      "solo-fpp": 44,
+      "duo-fpp": 115,
+      "squad-fpp": 222
     },
     "Baltic_Main": {
-      "solo": 0,
-      "duo": 0,
-      "squad": 3,
-      "solo-fpp": 0,
-      "duo-fpp": 1,
-      "squad-fpp": 2
+      "solo": 34,
+      "duo": 61,
+      "squad": 238,
+      "solo-fpp": 5,
+      "duo-fpp": 25,
+      "squad-fpp": 59
     },
     "Savage_Main": {
-      "solo": 1,
-      "duo": 1,
-      "squad": 5,
-      "solo-fpp": 0,
-      "duo-fpp": 2,
-      "squad-fpp": 0
+      "solo": 48,
+      "duo": 71,
+      "squad": 349,
+      "solo-fpp": 3,
+      "duo-fpp": 26,
+      "squad-fpp": 103
     },
     "Desert_Main": {
-      "solo": 0,
-      "duo": 0,
-      "squad": 4,
-      "solo-fpp": 1,
-      "duo-fpp": 0,
-      "squad-fpp": 0
+      "solo": 8,
+      "duo": 26,
+      "squad": 209,
+      "solo-fpp": 6,
+      "duo-fpp": 4,
+      "squad-fpp": 18
     },
     "Range_Main": {
-      "solo": 2,
+      "solo": 206,
       "duo": 0,
       "squad": 0,
       "solo-fpp": 0,
