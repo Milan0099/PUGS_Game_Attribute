@@ -224,6 +224,7 @@ const parseMapData = (mode, mnames, stats) => {
         }
         d.push((modeTot/total) * 100);
     }
+    console.log("midget---", d.map(p => parseFloat(p).toFixed(2)));
     return d.map(p => parseFloat(p).toFixed(2));
 };
 
